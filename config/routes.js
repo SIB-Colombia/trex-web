@@ -33,7 +33,8 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage'
+      controller: 'app'
+    , action: 'index'
   }
 
   /***************************************************************************
@@ -45,5 +46,16 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
-
+  , '/about': {
+      controller: 'home'
+    , action: 'about'
+  }
+  , '/credits': {
+     controller: 'home'
+   , action: 'credits'
+  }
+  , 'contact': {
+      controller: 'home'
+    , action: 'contact'
+  }
 };

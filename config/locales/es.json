@@ -1,4 +1,18 @@
 {
   "Welcome": "Bienvenido",
-  "A brand new app.": "Una nueva aplicación."
+  "A brand new app.": "Una nueva aplicación.",
+  "About": "Acerca de",
+  "Contact": "Contáctenos",
+  "Credits": "Créditos",
+  "btnBioRecords": "Registros biológicos",
+  "btnSpeciesList": "Lista de especies",
+  "lblHowto": "¿Cómo utilizar ésta la herramienta?",
+  "lblTerms": "Términos",
+  "lblOr": "Ó",
+  "lblDragnDrop": "Arrastre aquí su archivo",
+  "lblHelpTerms": "Ingrese los terminos de búsqueda",
+  "lblHelpDragnDrop": "O seleccione su archivo",
+  "lblResults": "Resultados",
+  "btnDownload": "Descargar",
+  "tblResultsCaption": "Busqueda taxonómica"
 }
