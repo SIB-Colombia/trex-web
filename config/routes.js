@@ -36,6 +36,10 @@ module.exports.routes = {
       controller: 'app'
     , action: 'index'
   }
+  , '/query': {
+     controller: 'app'
+   , action: 'query'
+  }
 
   /***************************************************************************
   *                                                                          *

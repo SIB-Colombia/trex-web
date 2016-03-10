@@ -1,153 +1,120 @@
-<div row class="testing">
-  <div column="6">
-    <button id="btnBioRecords"><%= __('btnBioRecords') %></button>
-    <button id="btnSpeciesList"><%= __('btnSpeciesList') %></button>
+<div ng-app="taxonApp" ng-controller="taxonController">
+<div class=""><!-- BEGIN -->
+  <div row class="testing">
+    <div column="6" class="testing">
+       <div column="4">
+         <input type="radio" id="btnBioRecords" name="queryType" value="bioRecords" ng-model="queryType" ng-change="on_queryType_change()" checked><label for="btnBioRecords"><%= __('btnBioRecords') %></label>
+       </div>
+       <div column="4">
+         <input type="radio" id="btnSpeciesList" name="queryType" value="speciesList" ng-model="queryType" ng-change="on_queryType_change()"><label for="btnSpeciesList"><%= __('btnSpeciesList') %></label>
+       </div>
+    </div>
+    <div column="4 +2" class="testing padding-top-1 text--right">
+        <a href="#"><%= __('lblHowto') %></a>
+    </div>
   </div>
-  <div column="3 +3" class="padding-top-1">
-    <p>
-      <a href="#"><%= __('lblHowto') %></a>
-    </p>
+  <div row class="testing margin-top-1">
+    <div column="5">
+      <label for="txtTerms"><%= __('lblTerms') %></label>
+      <textarea name="txtTerms" id="txtTerms" rows="6" class="margin-top-1" ng-model="txtTerms"">
+      </textarea>
+      <p class="input--help"><%= __('lblHelpTerms') %></p>
+      <div column="12" class="text--right no-padding">
+        <button id="btnSearch" class="button--xsm" ng-model="btnSearch" ng-click="on_search('btnSearch')"><%= __('btnSearch') %></button>
+      </div>
+    </div>
+    <div column="2" class="text--center" style="padding-top: 6em;">
+      <p><%= __('lblOr') %></p>
+    </div>
+    <div column="5">
+      <div column="12" class="drag-n-drop margin-top-1">
+        <p class="text--center"><%= __('lblDragnDrop') %></p>
+      </div>
+      <div column="12">
+        <p class="input--help"><%= __('lblHelpDragnDrop') %></p>
+        <input type="file"></input>
+      </div>
+    </div>
+  </div>
+  <div row class="testing margin-top-1">
+    <div>
+      <div column="7">
+        <span style="font-size: 130%;"><%= __('lblResults') %></span><br/ ><a href="#" style="font-size: 90%;">(<%= __('lblHelpFields') %>)</a>
+      </div>
+      <div column="3 +2" class="testing text--right margin-top-1">
+        <button class="button--xsm"><%= __('btnDownload') %></button>
+        <select name="ddlDownload" style="width: 5em;">
+          <option value="XLSX">XLSX</option>
+          <option value="CSV">CSV</option>
+          <option value="TXT">TXT</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div row class="testing margin-top-1" style="overflow-x: scroll;">
+    <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
+      <thead>
+        <th><%= __('tblColNameString') %></th>
+        <th><%= __('tblColNameMatch') %></th>
+        <th><%= __('tblColKingdom') %></th>
+        <th><%= __('tblColPhylum') %></th>
+        <th><%= __('tblColClass') %></th>
+        <th><%= __('tblColOrder') %></th>
+        <th><%= __('tblColFamily') %></th>
+        <th><%= __('tblColGenus') %></th>
+        <th><%= __('tblColSpecies') %></th>
+        <th><%= __('tblColSubSpecies') %></th>
+        <th><%= __('tblColSpecificEpithet') %></th>
+        <th><%= __('tblColInfraSpecificEpithet') %></th>
+        <th><%= __('tblColTaxonRank') %></th>
+        <th><%= __('tblColAuthor') %></th>
+        <th><%= __('tblColScientificName') %></th>
+        <th><%= __('tblDataSourceTitle') %></th>
+      </thead>
+      <tbody>
+          <tr ng-repeat="taxon in taxonsList">
+            <td>{{ taxon.supplied_name_string }}</td>
+            <td>{{ taxon.match }}</td>
+            <td>{{ taxon.kingdom }}</td>
+            <td>{{ taxon.phylum }}</td>
+            <td>{{ taxon.class }}</td>
+            <td>{{ taxon.order }}</td>
+            <td>{{ taxon.family }}</td>
+            <td>{{ taxon.genus }}</td>
+            <td>{{ taxon.species }}</td>
+            <td>{{ taxon.subspecies }}</td>
+            <td>{{ taxon.specificEpithet }}</td>
+            <td>{{ taxon.infraSpecificEpithet }}</td>
+            <td>{{ taxon.taxonRank }}</td>
+            <td>{{ taxon.author }}</td>
+            <td>{{ taxon.scientificName }}</td>
+            <td>{{ taxon.data_source_title }}</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div><!-- END -->
+
+
+<div id="modal2" class="invisible modal modal--flat ">
+  <div class="modal-container">
+    <div class="modal-header">
+      Modal Header
+
+      <a href="#close" class="modal-close">&times;</a>
+    </div>
+
+    <div class="modal-body">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget bibendum eros. Integer rhoncus pretium orci ut sagittis. Proin sollicitudin sapien eu dui imperdiet, et viverra enim dignissim.</p>
+    </div>
+
+    <div class="modal-footer">
+      <p>Modal Footer</p>
+    </div>
   </div>
 </div>
-<div row class="testing margin-top-1">
-  <div column="5">
-    <label for="txtTerms"><%= __('lblTerms') %></label>
-    <textarea name="txtTerms" id="txtTerms" rows="6" class="margin-top-1">
-    </textarea>
-    <p class="input--help"><%= __('lblHelpTerms') %></p>
-  </div>
-  <div column="2" class="text--center" style="padding-top: 6em;">
-    <p><%= __('lblOr') %></p>
-  </div>
-  <div column="5">
-    <div column="12" class="drag-n-drop margin-top-1">
-      <p class="text--center"><%= __('lblDragnDrop') %></p>
-    </div>
-    <div column="12">
-      <p class="input--help"><%= __('lblHelpDragnDrop') %></p>
-      <input type="file"></input>
-    </div>
-  </div>
-</div>
-<div row class="testing margin-top-1">
-  <div>
-    <div column="7">
-      <p><%= __('lblResults') %></p>
-    </div>
-    <div column="3 +2" class="testing">
-      <button class="button--xsm"><%= __('btnDownload') %></button>
-      <select name="ddlDownload" style="width: 5em;">
-        <option value="XLSX">XLSX</option>
-        <option value="CSV">CSV</option>
-        <option value="TXT">TXT</option>
-      </select>
-    </div>
-  </div>
-</div>
-<div row class="testing margin-top-1">
-  <table id="tblResults" class="table--full">
-    <caption><%= __('tblResultsCaption') %></caption>
-    <thead>
-      <th>A</th>
-      <th>B</th>
-      <th>C</th>
-      <th>D</th>
-      <th>E</th>
-      <th>F</th>
-      <th>G</th>
-    </thead>
-    <tbody>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-      <tr>
-        <td>The cure</td>
-        <td> xxx</td>
-        <td>Santa</td>
-        <td>Jesus</td>
-        <td>Camiseta</td>
-        <td>Bisturi</td>
-        <td>No</td>
-      </tr>
-    </tbody>
-    <tfoot></tfoot>
-  </table>
+
+<p class="invisible"><a href="#modal2">Open Flat Modal</a></p>
+
+
 </div>
