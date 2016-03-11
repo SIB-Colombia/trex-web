@@ -13,11 +13,11 @@
   </head>
   <body>
     <header container>
-      <div row class="testing">
-        <div column="2" class="testing">
-          <img src="/images/47877012.png" width="150px" height="150px" alt="SIB Logo" >
+      <div row class="testing margin-top-1">
+        <div column="3" class="testing">
+          <img src="/images/<%= __("trexLogo") %>" alt="T-Rex Logo" class="media--fluid" >
         </div>
-        <div column="6 +4" class="relative-element testing" style="padding-top: 6.55em;">
+        <div column="6 +3" class="testing" style="padding-top: 1em;">
           <div column="3" class="testing">
             <h4>
               <a href="#"><%= __('About') %></a>
@@ -43,6 +43,7 @@
           </div>
         </div>
       </div>
+      <hr style="margin:0;" />
     </header>
     <div container class="testing main-panel">
       <%- body %>
@@ -52,8 +53,11 @@
     
     <!--TEMPLATES END-->
     <!--SCRIPTS-->
+    <script src="/js/dependencies/Blob.js"></script>
+    <script src="/js/dependencies/FileSaver.js"></script>
     <script src="/js/dependencies/angular.js"></script>
     <script src="/js/dependencies/gettext.js"></script>
+    <script src="/js/dependencies/xlsx.core.min.js"></script>
     <script src="/js/app/app.js"></script>
     <script src="/js/app/controllers.js"></script>
     <script src="/js/app/filters.js"></script>

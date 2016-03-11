@@ -4,7 +4,7 @@
  LAYOUT
 **/
 .main-panel{
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 .padding-top-1 {
@@ -51,7 +51,7 @@
 .invisible{
  display:none;
 }
-/*
+/**/
 .testing {
   border-style: dashed;
   border-width: thin;

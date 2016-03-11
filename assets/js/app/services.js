@@ -8,5 +8,13 @@ factory('tRexAPIService', function($http){
       method: 'POST'
     });
   }
+
+  tRexAPI.gnrDatasources = function(){
+    return $http({
+      url: '/data_sources.json',
+      method: 'GET'
+    });
+  }
+
   return tRexAPI;
 });

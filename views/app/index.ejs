@@ -1,48 +1,44 @@
 <div ng-app="taxonApp" ng-controller="taxonController">
-<div class=""><!-- BEGIN -->
+<div class="invisible"><!-- BEGIN -->
   <div row class="testing">
-    <div column="6" class="testing">
-       <div column="4">
-         <input type="radio" id="btnBioRecords" name="queryType" value="bioRecords" ng-model="queryType" ng-change="on_queryType_change()" checked><label for="btnBioRecords"><%= __('btnBioRecords') %></label>
-       </div>
-       <div column="4">
-         <input type="radio" id="btnSpeciesList" name="queryType" value="speciesList" ng-model="queryType" ng-change="on_queryType_change()"><label for="btnSpeciesList"><%= __('btnSpeciesList') %></label>
-       </div>
+    <div column="3" class="testing padding-top-1">
+        <a href="#"><%= __('lblAdvancedSearch') %></a>
     </div>
-    <div column="4 +2" class="testing padding-top-1 text--right">
+    <div column="3 +6" class="testing padding-top-1 text--right">
         <a href="#"><%= __('lblHowto') %></a>
     </div>
   </div>
   <div row class="testing margin-top-1">
     <div column="5">
-      <label for="txtTerms"><%= __('lblTerms') %></label>
-      <textarea name="txtTerms" id="txtTerms" rows="6" class="margin-top-1" ng-model="txtTerms"">
+      <textarea name="txtTerms" id="txtTerms" rows="6" ng-model="txtTerms"">
       </textarea>
       <p class="input--help"><%= __('lblHelpTerms') %></p>
       <div column="12" class="text--right no-padding">
-        <button id="btnSearch" class="button--xsm" ng-model="btnSearch" ng-click="on_search('btnSearch')"><%= __('btnSearch') %></button>
+        <button id="btnSearch" class="button--xsm" ng-model="btnSearch" ng-click="on_search('btnSearch')">
+          <%= __('btnSearch') %>
+        </button>
       </div>
     </div>
     <div column="2" class="text--center" style="padding-top: 6em;">
       <p><%= __('lblOr') %></p>
     </div>
     <div column="5">
-      <div column="12" class="drag-n-drop margin-top-1">
+      <div column="12" class="drag-n-drop">
         <p class="text--center"><%= __('lblDragnDrop') %></p>
       </div>
       <div column="12">
         <p class="input--help"><%= __('lblHelpDragnDrop') %></p>
-        <input type="file"></input>
+        <input type="file" id="flFile"></input>
       </div>
     </div>
   </div>
   <div row class="testing margin-top-1">
     <div>
       <div column="7">
-        <span style="font-size: 130%;"><%= __('lblResults') %></span><br/ ><a href="#" style="font-size: 90%;">(<%= __('lblHelpFields') %>)</a>
+        <span style="font-size: 130%;"><%= __('lblResults') %></span><br/ >
       </div>
       <div column="3 +2" class="testing text--right margin-top-1">
-        <button class="button--xsm"><%= __('btnDownload') %></button>
+        <button class="button--xsm" ng-model="btnDownload" ng-click="on_btnDownload_click()"><%= __('btnDownload') %></button>
         <select name="ddlDownload" style="width: 5em;">
           <option value="XLSX">XLSX</option>
           <option value="CSV">CSV</option>
@@ -96,16 +92,19 @@
 </div><!-- END -->
 
 
-<div id="modal2" class="invisible modal modal--flat ">
+<div id="modal2" class="modal modal--flat ">
   <div class="modal-container">
     <div class="modal-header">
-      Modal Header
+      <%= __('lblAdvancedSearch') %>
 
       <a href="#close" class="modal-close">&times;</a>
     </div>
 
-    <div class="modal-body">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget bibendum eros. Integer rhoncus pretium orci ut sagittis. Proin sollicitudin sapien eu dui imperdiet, et viverra enim dignissim.</p>
+    <div class="modal-body" style="overflow-y:scroll;">
+        <h4><%= __('lblDataSourceOption') %></h4>
+        <p>
+          
+        </p>
     </div>
 
     <div class="modal-footer">
@@ -114,7 +113,7 @@
   </div>
 </div>
 
-<p class="invisible"><a href="#modal2">Open Flat Modal</a></p>
+<p class=""><a href="#modal2">Open Flat Modal</a></p>
 
 
 </div>

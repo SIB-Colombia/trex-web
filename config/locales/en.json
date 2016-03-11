@@ -41,5 +41,8 @@
   "btnSearch": "Search",
   "tblColSubSpecies": "Subspecies",
   "tblColNameMatch": "Match",
-  "tblDataSourceTitle": "Data source title"
+  "tblDataSourceTitle": "Data source title",
+  "trexLogo": "trexlogoen.png",
+  "lblAdvancedSearch": "Advanced search",
+  "lblDataSourceOption": "Select search datasources"
 }

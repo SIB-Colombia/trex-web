@@ -41,5 +41,8 @@
   "btnSearch": "Buscar",
   "tblColSubSpecies": "Subespecie",
   "tblColNameMatch": "Cotejo",
-  "tblDataSourceTitle": "Fuente de infomación"
+  "tblDataSourceTitle": "Fuente de infomación",
+  "trexLogo": "trexlogoes.png",
+  "lblAdvancedSearch": "Busqueda avanzada",
+  "lblDataSourceOption": "Seleccione fuentes de busqueda"
 }
