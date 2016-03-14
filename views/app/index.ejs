@@ -48,44 +48,27 @@
       </div>
     </div>
   </div>
-  <div row class="testing margin-top-1" style="overflow-x: scroll;">
+  <div row class="testing margin-top-1">
     <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
       <thead>
-        <th><%= __('tblColNameString') %></th>
+        <th><%= __('tblColSubmittedString') %></th>
         <th><%= __('tblColNameMatch') %></th>
-        <th><%= __('tblColKingdom') %></th>
-        <th><%= __('tblColPhylum') %></th>
-        <th><%= __('tblColClass') %></th>
-        <th><%= __('tblColOrder') %></th>
-        <th><%= __('tblColFamily') %></th>
-        <th><%= __('tblColGenus') %></th>
-        <th><%= __('tblColSpecies') %></th>
-        <th><%= __('tblColSubSpecies') %></th>
-        <th><%= __('tblColSpecificEpithet') %></th>
-        <th><%= __('tblColInfraSpecificEpithet') %></th>
-        <th><%= __('tblColTaxonRank') %></th>
-        <th><%= __('tblColAuthor') %></th>
-        <th><%= __('tblColScientificName') %></th>
+        <th><%= __('tblColNameString') %></th>
         <th><%= __('tblDataSourceTitle') %></th>
+        <th><%= __('tblColScore') %></th>
+        <th><%= __('tblColDetails') %></th>
       </thead>
       <tbody>
           <tr ng-repeat="taxon in taxonsList">
             <td>{{ taxon.supplied_name_string }}</td>
             <td>{{ taxon.match }}</td>
-            <td>{{ taxon.kingdom }}</td>
-            <td>{{ taxon.phylum }}</td>
-            <td>{{ taxon.class }}</td>
-            <td>{{ taxon.order }}</td>
-            <td>{{ taxon.family }}</td>
-            <td>{{ taxon.genus }}</td>
-            <td>{{ taxon.species }}</td>
-            <td>{{ taxon.subspecies }}</td>
-            <td>{{ taxon.specificEpithet }}</td>
-            <td>{{ taxon.infraSpecificEpithet }}</td>
-            <td>{{ taxon.taxonRank }}</td>
-            <td>{{ taxon.author }}</td>
             <td>{{ taxon.scientificName }}</td>
-            <td>{{ taxon.data_source_title }}</td>
+            <td ng-switch="taxon.has_url">
+              <a href="{{ taxon.url }}" target="_blank" ng-switch-when="true">{{ taxon.data_source_title }}</a>
+              <div ng-switch-default>{{ taxon.data_source_title }}</div>
+            </td>
+            <td>{{ taxon.score }}</td>
+            <td><a href="#"><%= __('tblColDetails') %></a></td>
           </tr>
       </tbody>
     </table>
@@ -99,7 +82,6 @@
       <h4><%= __('lblAdvancedSearch') %></h4>
       <a href="#close" class="modal-close">&times;</a>
     </div>
-
     <div class="modal-body">
         <%= __('lblDataSourceOption') %>
         <p class="input--help">(<%= __('lblAboutDataSourceOption') %>)</p>

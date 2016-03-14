@@ -300,43 +300,51 @@ controller('taxonController', function($scope, tRexAPIService){
       $scope.taxonsList = [];
       res.data.forEach(function(v, k) {
         if(v.is_known_name) {
-          var taxonClassifications = _getTaxonClassification(
-              v.results[0].classification_path.split('|')
-            , v.results[0].classification_path_ranks.split('|'));
+          var taxonRanks =  [ ];
+          var taxonClassifications = { };
+          var taxonRank = { };
+          for(var k in v.results) {
+            taxonClassifications = _getTaxonClassification(
+                v.results[k].classification_path.split('|')
+              , v.results[k].classification_path_ranks.split('|'));
 
-          var taxonRanks = [
-              taxonClassifications.kingdom != null ? 'kingdom' : null
-            , taxonClassifications.phylum != null ? 'phylum' : null
-            , taxonClassifications.class != null ? 'class' : null
-            , taxonClassifications.order != null ? 'order' : null
-            , taxonClassifications.family != null ? 'family' : null
-            , taxonClassifications.genus != null ? 'genus' : null
-            , taxonClassifications.species != null ? 'species' : null
-            , taxonClassifications.subspecies != null ? 'subspecies': null,
-            , taxonClassifications.specificEpithet != null ? 'specificEpithet' : null
-            , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
-          ];
+            taxonRanks = [
+                taxonClassifications.kingdom != null ? 'kingdom' : null
+              , taxonClassifications.phylum != null ? 'phylum' : null
+              , taxonClassifications.class != null ? 'class' : null
+              , taxonClassifications.order != null ? 'order' : null
+              , taxonClassifications.family != null ? 'family' : null
+              , taxonClassifications.genus != null ? 'genus' : null
+              , taxonClassifications.species != null ? 'species' : null
+              , taxonClassifications.subspecies != null ? 'subspecies': null,
+              , taxonClassifications.specificEpithet != null ? 'specificEpithet' : null
+              , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
+            ];
 
-          var taxonRank = _getString(_getTaxonRank(taxonRanks));
+            taxonRank = _getString(_getTaxonRank(taxonRanks));
 
-          $scope.taxonsList.push({
-              supplied_name_string: v.supplied_name_string
-            , kingdom: taxonClassifications.kingdom
-            , phylum: taxonClassifications.phylum
-            , class: taxonClassifications.class
-            , order: taxonClassifications.order
-            , family: taxonClassifications.family
-            , genus: taxonClassifications.genus
-            , species: taxonClassifications.species
-            , subspecies: taxonClassifications.subspecies
-            , specificEpithet: taxonClassifications.specificEpithet
-            , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
-            , taxonRank: taxonRank
-            , author: null
-            , scientificName: v.results[0].canonical_form
-            , data_source_title: v.results[0].data_source_title
-            , match: _getString(v.is_known_name)
-          });
+            $scope.taxonsList.push({
+                supplied_name_string: v.supplied_name_string
+              , kingdom: taxonClassifications.kingdom
+              , phylum: taxonClassifications.phylum
+              , class: taxonClassifications.class
+              , order: taxonClassifications.order
+              , family: taxonClassifications.family
+              , genus: taxonClassifications.genus
+              , species: taxonClassifications.species
+              , subspecies: taxonClassifications.subspecies
+              , specificEpithet: taxonClassifications.specificEpithet
+              , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
+              , taxonRank: taxonRank
+              , author: null
+              , scientificName: v.results[k].canonical_form
+              , data_source_title: v.results[k].data_source_title
+              , score: v.results[k].score
+              , match: _getString(v.is_known_name)
+              , url: v.results[k].url
+              , has_url: v.results[k].url != undefined
+            });
+          }
         } else {
           $scope.taxonsList.push({
               supplied_name_string: v.supplied_name_string

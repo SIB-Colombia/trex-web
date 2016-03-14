@@ -45,5 +45,7 @@
   "trexLogo": "trexlogoes.png",
   "lblAdvancedSearch": "Busqueda avanzada",
   "lblDataSourceOption": "Seleccione fuentes de busqueda",
-  "lblAboutDataSourceOption": "todas las fuentes por defecto"
+  "lblAboutDataSourceOption": "todas las fuentes por defecto",
+  "tblColSubmittedString": "Término de búsqueda",
+  "tblColDetails": "Detalles"
 }
