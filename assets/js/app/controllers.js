@@ -3,7 +3,176 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.queryType = "bioRecords";
   $scope.taxonFilter = null;
   $scope.taxonsList  = [];
+  $scope.dataSources = [];
+  $scope.selectedDataSources = [];
+  $scope.fileReadOutput = null;
+
   $scope.lang = navigator.language || navigator.userLanguage;
+
+  var X = XLSX;
+  var XW = {
+  	/* worker message */
+  	msg: 'xlsx',
+  	/* worker scripts */
+  	rABS: './xlsxworker2.js',
+  	norABS: './xlsxworker1.js',
+  	noxfer: './xlsxworker.js'
+  };
+
+  var drop = document.getElementById('dragNDrop');
+  var xlf = document.getElementById('flFile');
+
+  var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
+  var use_worker = typeof Worker !== 'undefined';
+  var transferable = use_worker;
+  var wtf_mode = false;
+
+  function fixdata(data) {
+  	var o = "", l = 0, w = 10240;
+  	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+  	o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+  	return o;
+  }
+
+  function ab2str(data) {
+  	var o = "", l = 0, w = 10240;
+  	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
+  	o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
+  	return o;
+  }
+
+  function s2ab(s) {
+  	var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
+  	for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
+  	return [v, b];
+  }
+
+  function xw_noxfer(data, cb) {
+  	var worker = new Worker(XW.noxfer);
+  	worker.onmessage = function(e) {
+  		switch(e.data.t) {
+  			case 'ready': break;
+  			case 'e': console.error(e.data.d); break;
+  			case XW.msg: cb(JSON.parse(e.data.d)); break;
+  		}
+  	};
+  	var arr = rABS ? data : btoa(fixdata(data));
+  	worker.postMessage({d:arr,b:rABS});
+  }
+
+  function xw_xfer(data, cb) {
+  	var worker = new Worker(rABS ? XW.rABS : XW.norABS);
+  	worker.onmessage = function(e) {
+  		switch(e.data.t) {
+  			case 'ready': break;
+  			case 'e': console.error(e.data.d); break;
+  			default: xx=ab2str(e.data).replace(/\n/g,"\\n").replace(/\r/g,"\\r"); console.log("done"); cb(JSON.parse(xx)); break;
+  		}
+  	};
+  	if(rABS) {
+  		var val = s2ab(data);
+  		worker.postMessage(val[1], [val[1]]);
+  	} else {
+  		worker.postMessage(data, [data]);
+  	}
+  }
+
+  function xw(data, cb) {
+  	transferable = document.getElementsByName("xferable")[0].checked;
+  	if(transferable) xw_xfer(data, cb);
+  	else xw_noxfer(data, cb);
+  }
+
+  function get_radio_value( radioName ) {
+  	var radios = document.getElementsByName( radioName );
+  	for( var i = 0; i < radios.length; i++ ) {
+  		if( radios[i].checked || radios.length === 1 ) {
+  			return radios[i].value;
+  		}
+  	}
+  }
+
+  function to_json(workbook) {
+  	var result = {};
+  	workbook.SheetNames.forEach(function(sheetName) {
+  		var roa = X.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+  		if(roa.length > 0){
+  			result[sheetName] = roa;
+  		}
+  	});
+  	return result;
+  }
+
+  function to_csv(workbook) {
+  	var result = [];
+  	workbook.SheetNames.forEach(function(sheetName) {
+  		var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+  		if(csv.length > 0){
+  			result.push("SHEET: " + sheetName);
+  			result.push("");
+  			result.push(csv);
+  		}
+  	});
+  	return result.join("\n");
+  }
+
+  function handleDrop(e) {
+  	e.stopPropagation();
+  	e.preventDefault();
+  	var files = e.dataTransfer.files;
+  	var f = files[0];
+  	{
+  		var reader = new FileReader();
+  		var name = f.name;
+  		reader.onload = function(e) {
+  			var data = e.target.result;
+  			var wb;
+  			wb = X.read(data, {type: 'binary'});
+  			$scope.fileReadOutput = to_json(wb);
+        fileTermsSearch();
+  		};
+  		reader.readAsBinaryString(f);
+  	}
+  }
+
+  function handleDragover(e) {
+  	e.stopPropagation();
+  	e.preventDefault();
+  	e.dataTransfer.dropEffect = 'copy';
+  }
+
+  if(drop.addEventListener) {
+  	drop.addEventListener('dragenter', handleDragover, false);
+  	drop.addEventListener('dragover', handleDragover, false);
+  	drop.addEventListener('drop', handleDrop, false);
+  }
+
+  function handleFile(e) {
+  	var files = e.target.files;
+  	var f = files[0];
+  	{
+  		var reader = new FileReader();
+  		var name = f.name;
+  		reader.onload = function(e) {
+  			var data = e.target.result;
+  			var wb;
+  			wb = X.read(data, {type: 'binary'});
+        $scope.fileReadOutput = to_json(wb);
+        fileTermsSearch();
+  		};
+  		reader.readAsBinaryString(f);
+  	}
+  }
+
+  if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
+
+  tRexAPIService.gnrDatasources().success(function (res){
+    res.forEach(function(v,k){
+      $scope.dataSources.push({ id:v.id, title: v.title });
+    });
+  }).error(function (err) {
+    console.log("Error getting data sources");
+  });
 
   $scope.on_search = function (sender){
     $scope.lang = navigator.language || navigator.userLanguage;
@@ -107,76 +276,111 @@ controller('taxonController', function($scope, tRexAPIService){
         alert('It is only possible to get 1000 on this input');
       } else {
         // query the terms
-        req = { names: terms.join('|') };
-        tRexAPIService.searchTaxons(req).success(function(res) {
-          if (res != null && res.data != null && res.data.length > 0) {
-            $scope.taxonsList = [];
-            res.data.forEach(function(v, k) {
-              if(v.is_known_name) {
-                var taxonClassifications = _getTaxonClassification(
-                    v.results[0].classification_path.split('|')
-                  , v.results[0].classification_path_ranks.split('|'));
-
-                var taxonRanks = [
-                    taxonClassifications.kingdom != null ? 'kingdom' : null
-                  , taxonClassifications.phylum != null ? 'phylum' : null
-                  , taxonClassifications.class != null ? 'class' : null
-                  , taxonClassifications.order != null ? 'order' : null
-                  , taxonClassifications.family != null ? 'family' : null
-                  , taxonClassifications.genus != null ? 'genus' : null
-                  , taxonClassifications.species != null ? 'species' : null
-                  , taxonClassifications.subspecies != null ? 'subspecies': null,
-                  , taxonClassifications.specificEpithet != null ? 'specificEpithet' : null
-                  , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
-                ];
-
-                var taxonRank = _getString(_getTaxonRank(taxonRanks));
-
-                $scope.taxonsList.push({
-                    supplied_name_string: v.supplied_name_string
-                  , kingdom: taxonClassifications.kingdom
-                  , phylum: taxonClassifications.phylum
-                  , class: taxonClassifications.class
-                  , order: taxonClassifications.order
-                  , family: taxonClassifications.family
-                  , genus: taxonClassifications.genus
-                  , species: taxonClassifications.species
-                  , subspecies: taxonClassifications.subspecies
-                  , specificEpithet: taxonClassifications.specificEpithet
-                  , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
-                  , taxonRank: taxonRank
-                  , author: null
-                  , scientificName: v.results[0].canonical_form
-                  , data_source_title: v.results[0].data_source_title
-                  , match: _getString(v.is_known_name)
-                });
-              } else {
-                $scope.taxonsList.push({
-                    supplied_name_string: v.supplied_name_string
-                  , kingdom: null
-                  , phylum: null
-                  , class: null
-                  , order: null
-                  , family: null
-                  , genus: null
-                  , species: null
-                  , subspecies: null
-                  , specificEpithet: null
-                  , infraSpecificEpithet: null
-                  , taxonRank: null
-                  , author: null
-                  , scientificName: null
-                  , data_source_title: null
-                  , match: _getString(v.is_known_name)
-                });
-              }
-            });
-          }
-        }).error(function(res){
-          console.log('ERROR on txtTerms_search');
-        });
+        req = { names: terms.join('|'), data_source_ids: $scope.selectedDataSources.join('|') };
+        tRexAPIService.searchTaxons(req).success(taxonSearch_success).error(taxonSearch_error);
        }
      }
+  }
+
+  function fileTermsSearch() {
+    var terms = fileOutputParse();
+    if (terms.length > 0) {
+      $scope.taxonsList = [];
+      // Query the API each 700 items
+      var chunks = Array.chunk(terms, 700);
+      for (var c in chunks) {
+        var req = { names: chunks[c].join("|"), data_source_ids: $scope.selectedDataSources.join("|")};
+        tRexAPIService.searchTaxons(req).success(taxonSearch_success).error(taxonSearch_error);
+      }
+    }
+  }
+
+  function taxonSearch_success(res) {
+    if (res != null && res.data != null && res.data.length > 0) {
+      $scope.taxonsList = [];
+      res.data.forEach(function(v, k) {
+        if(v.is_known_name) {
+          var taxonClassifications = _getTaxonClassification(
+              v.results[0].classification_path.split('|')
+            , v.results[0].classification_path_ranks.split('|'));
+
+          var taxonRanks = [
+              taxonClassifications.kingdom != null ? 'kingdom' : null
+            , taxonClassifications.phylum != null ? 'phylum' : null
+            , taxonClassifications.class != null ? 'class' : null
+            , taxonClassifications.order != null ? 'order' : null
+            , taxonClassifications.family != null ? 'family' : null
+            , taxonClassifications.genus != null ? 'genus' : null
+            , taxonClassifications.species != null ? 'species' : null
+            , taxonClassifications.subspecies != null ? 'subspecies': null,
+            , taxonClassifications.specificEpithet != null ? 'specificEpithet' : null
+            , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
+          ];
+
+          var taxonRank = _getString(_getTaxonRank(taxonRanks));
+
+          $scope.taxonsList.push({
+              supplied_name_string: v.supplied_name_string
+            , kingdom: taxonClassifications.kingdom
+            , phylum: taxonClassifications.phylum
+            , class: taxonClassifications.class
+            , order: taxonClassifications.order
+            , family: taxonClassifications.family
+            , genus: taxonClassifications.genus
+            , species: taxonClassifications.species
+            , subspecies: taxonClassifications.subspecies
+            , specificEpithet: taxonClassifications.specificEpithet
+            , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
+            , taxonRank: taxonRank
+            , author: null
+            , scientificName: v.results[0].canonical_form
+            , data_source_title: v.results[0].data_source_title
+            , match: _getString(v.is_known_name)
+          });
+        } else {
+          $scope.taxonsList.push({
+              supplied_name_string: v.supplied_name_string
+            , kingdom: null
+            , phylum: null
+            , class: null
+            , order: null
+            , family: null
+            , genus: null
+            , species: null
+            , subspecies: null
+            , specificEpithet: null
+            , infraSpecificEpithet: null
+            , taxonRank: null
+            , author: null
+            , scientificName: null
+            , data_source_title: null
+            , match: _getString(v.is_known_name)
+          });
+        }
+      });
+    }
+  }
+
+  function taxonSearch_error(res){
+    console.log('ERROR on txtTerms_search');
+  }
+
+  function fileOutputParse() {
+    var terms = [];
+    if ($scope.fileReadOutput != null && $scope.fileReadOutput != undefined) {
+      var headerTag = null;
+      for (var k in $scope.fileReadOutput) {
+        // The file parser assumes that the header begin on the first row of the file
+        headerTag = Object.keys($scope.fileReadOutput[k][0])[0];
+        terms.push(headerTag);
+        for (var sk in $scope.fileReadOutput[k]) {
+          terms.push($scope.fileReadOutput[k][sk][headerTag]);
+        }
+        // ITERATE ONLY ON THE FIRST SHEET
+        break;
+      }
+    }
+    return terms;
   }
 
   function _getTaxonClassification(path, rank){
@@ -245,4 +449,16 @@ controller('taxonController', function($scope, tRexAPIService){
     }
     return result;
   }
+
+  function chunk (arr, len) {
+    var chunks = [],
+        i = 0,
+        n = arr.length;
+    while (i < n) {
+      chunks.push(arr.slice(i, i += len));
+    }
+    return chunks;
+  }
+
+  Array.chunk = chunk;
 });

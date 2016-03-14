@@ -44,5 +44,6 @@
   "tblDataSourceTitle": "Data source title",
   "trexLogo": "trexlogoen.png",
   "lblAdvancedSearch": "Advanced search",
-  "lblDataSourceOption": "Select search datasources"
+  "lblDataSourceOption": "Select search datasources",
+  "lblAboutDataSourceOption": "All datasources by default"
 }

@@ -11,7 +11,7 @@ factory('tRexAPIService', function($http){
 
   tRexAPI.gnrDatasources = function(){
     return $http({
-      url: '/data_sources.json',
+      url: '/js/dependencies/data_sources.json',
       method: 'GET'
     });
   }

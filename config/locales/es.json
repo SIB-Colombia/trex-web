@@ -44,5 +44,6 @@
   "tblDataSourceTitle": "Fuente de infomación",
   "trexLogo": "trexlogoes.png",
   "lblAdvancedSearch": "Busqueda avanzada",
-  "lblDataSourceOption": "Seleccione fuentes de busqueda"
+  "lblDataSourceOption": "Seleccione fuentes de busqueda",
+  "lblAboutDataSourceOption": "todas las fuentes por defecto"
 }

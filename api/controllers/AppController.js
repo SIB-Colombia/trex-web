@@ -22,7 +22,7 @@ module.exports = {
 			url: "http://52.36.29.146:11080",
 			version: '*'
 		});
-		var data = { names: req.param('names')};
+		var data = req.allParams();
 		tRexClient.post('/resolver', data, function(dres, dreq, dres, dobj){
     	res.send(dobj);
   	});

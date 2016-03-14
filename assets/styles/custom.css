@@ -41,17 +41,25 @@
   text-align: center;
 }
 
+
+/**
+ * Modal advanced search
+**/
+#modal-advanced-search {
+
+}
+
 /**
  * GENERAL
 **/
 .no-padding {
   padding: 0;
 }
-/**/
+/*/
 .invisible{
  display:none;
 }
-/**/
+/*
 .testing {
   border-style: dashed;
   border-width: thin;

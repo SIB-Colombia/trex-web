@@ -1,5 +1,5 @@
 angular.module('taxonApp', [
   'taxonApp.controllers',
   'taxonApp.services',
-  'gettext'
+  'checklist-model'
 ]);
