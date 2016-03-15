@@ -363,7 +363,7 @@ controller('taxonController', function($scope, tRexAPIService){
             , scientificName: null
             , data_source_title: null
             , match: _getString(v.is_known_name)
-            , url: v.results[k].url
+            , url: null
             , has_url: false
           });
         }
