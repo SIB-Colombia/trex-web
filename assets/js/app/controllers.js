@@ -299,7 +299,7 @@ controller('taxonController', function($scope, tRexAPIService){
     if (res != null && res.data != null && res.data.length > 0) {
       $scope.taxonsList = [];
       res.data.forEach(function(v, k) {
-        if(v.results != null && v.results.length > 0) {
+        if(v.results != undefined && v.results.length > 0) {
           var taxonRanks =  [ ];
           var taxonClassifications = { };
           var taxonRank = { };
