@@ -364,7 +364,7 @@ controller('taxonController', function($scope, tRexAPIService){
             , data_source_title: null
             , match: _getString(v.is_known_name)
             , url: v.results[k].url
-            , has_url: v.results[k].url != undefined
+            , has_url: false
           });
         }
       });
