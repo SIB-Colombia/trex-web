@@ -299,7 +299,7 @@ controller('taxonController', function($scope, tRexAPIService){
     if (res != null && res.data != null && res.data.length > 0) {
       $scope.taxonsList = [];
       res.data.forEach(function(v, k) {
-        if(v.is_known_name) {
+        if(v.results != null && v.results.length > 0) {
           var taxonRanks =  [ ];
           var taxonClassifications = { };
           var taxonRank = { };
@@ -337,7 +337,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
               , taxonRank: taxonRank
               , author: null
-              , scientificName: v.results[k].canonical_form
+              , scientificName: v.results[k].name_string
               , data_source_title: v.results[k].data_source_title
               , score: v.results[k].score
               , match: _getString(v.is_known_name)
@@ -363,6 +363,8 @@ controller('taxonController', function($scope, tRexAPIService){
             , scientificName: null
             , data_source_title: null
             , match: _getString(v.is_known_name)
+            , url: v.results[k].url
+            , has_url: v.results[k].url != undefined
           });
         }
       });

@@ -47,5 +47,6 @@
   "lblDataSourceOption": "Seleccione fuentes de busqueda",
   "lblAboutDataSourceOption": "todas las fuentes por defecto",
   "tblColSubmittedString": "Término de búsqueda",
-  "tblColDetails": "Detalles"
+  "tblColDetails": "Detalles",
+  "lblAcceptedFormats": "Formatos aceptados: XLSX/CSV"
 }

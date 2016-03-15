@@ -47,5 +47,6 @@
   "lblDataSourceOption": "Select search datasources",
   "lblAboutDataSourceOption": "All datasources by default",
   "tblColSubmittedString": "Submitted string",
-  "tblColDetails": "Details"
+  "tblColDetails": "Details",
+  "lblAcceptedFormats": "Accepted formats: XLSX/CSV"
 }
