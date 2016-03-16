@@ -8,7 +8,7 @@
   "lblTerms": "Términos",
   "lblOr": "Ó",
   "lblDragnDrop": "Arrastre aquí su archivo",
-  "lblHelpTerms": "Ingrese los terminos de búsqueda",
+  "lblHelpTerms": "Ingrese los terminos de búsqueda (máximo 1000)",
   "lblHelpDragnDrop": "O seleccione su archivo",
   "lblResults": "Resultados de la busqueda taxonómica",
   "btnDownload": "Descargar",
@@ -48,5 +48,6 @@
   "lblAboutDataSourceOption": "todas las fuentes por defecto",
   "tblColSubmittedString": "Término de búsqueda",
   "tblColDetails": "Detalles",
-  "lblAcceptedFormats": "Formatos aceptados: XLSX/CSV"
+  "lblAcceptedFormats": "Formatos aceptados: XLSX/CSV",
+  "lblMaxUploadTerms": "10000 maximum"
 }

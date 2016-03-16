@@ -8,7 +8,7 @@
   "lblTerms": "Query terms",
   "lblOr": "Or",
   "lblDragnDrop": "Drag your file right here",
-  "lblHelpTerms": "Write the terms to search",
+  "lblHelpTerms": "Write the terms to search (1000 maximum)",
   "lblHelpDragnDrop": "Or choose your file",
   "lblResults": "Taxonomical search results",
   "btnDownload": "Download",
@@ -48,5 +48,6 @@
   "lblAboutDataSourceOption": "All datasources by default",
   "tblColSubmittedString": "Submitted string",
   "tblColDetails": "Details",
-  "lblAcceptedFormats": "Accepted formats: XLSX/CSV"
+  "lblAcceptedFormats": "Accepted formats: XLSX/CSV",
+  "lblMaxUploadTerms": "10000 maximum"
 }
