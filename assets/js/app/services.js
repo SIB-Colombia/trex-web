@@ -16,5 +16,12 @@ factory('tRexAPIService', function($http){
     });
   }
 
+  tRexAPI.tRexDataSourcesExtraData = function(){
+    return $http({
+      url: '/js/dependencies/trexDataSourcesExtraData.json',
+      method: 'GET'
+    });
+  }
+
   return tRexAPI;
 });

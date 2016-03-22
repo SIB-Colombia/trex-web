@@ -1,11 +1,17 @@
 angular.module('taxonApp.controllers', []).
 controller('taxonController', function($scope, tRexAPIService){
+  $scope.info =  [];
+  $scope.warning = [];
+  $scope.error = [];
+  $scope.success = [];
   $scope.queryType = "bioRecords";
   $scope.taxonFilter = null;
   $scope.taxonsList  = [];
   $scope.dataSources = [];
   $scope.selectedDataSources = [];
   $scope.fileReadOutput = null;
+  $scope.typeFilter = "general";
+  $scope.dataSourcesTitles = [];
 
   $scope.lang = navigator.language || navigator.userLanguage;
 
@@ -166,9 +172,9 @@ controller('taxonController', function($scope, tRexAPIService){
 
   if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
 
-  tRexAPIService.gnrDatasources().success(function (res){
+  tRexAPIService.tRexDataSourcesExtraData().success(function (res){
     res.forEach(function(v,k){
-      $scope.dataSources.push({ id:v.id, title: v.title });
+      $scope.dataSources.push({ id:v.id, title: v.title, datasource_type: v.datasource_type });
     });
   }).error(function (err) {
     console.log("Error getting data sources");
@@ -176,13 +182,19 @@ controller('taxonController', function($scope, tRexAPIService){
 
   $scope.on_search = function (sender){
     $scope.lang = navigator.language || navigator.userLanguage;
+    $scope.warning = [];
     switch (sender) {
       case 'btnSearch':
       case 'txtTerms':
-       if ($scope.txtTerms.length >= 3){
-         txtTerms_search(sender);
+       if ($scope.txtTerms != undefined && $scope.txtTerms.length >= 3){
+         if($scope.selectedDataSources.length > 0){
+           $scope.processing = true;
+           txtTerms_search(sender);
+         } else {
+           $scope.error.push(_getString('warningnoDataSource'));
+         }
        } else {
-         //TODO: display no results
+         $scope.error.push(_getString('warningnoData'));
        }
         break;
       default:
@@ -204,6 +216,11 @@ controller('taxonController', function($scope, tRexAPIService){
 
     saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
   }
+
+  $scope.on_clean = function() {
+    console.log("CLEAN");
+    alert("NOT IMPLEMENTED YET");
+  };
 
   function _s2ab(s) {
   	var buf = new ArrayBuffer(s.length);
@@ -282,18 +299,60 @@ controller('taxonController', function($scope, tRexAPIService){
      }
   }
 
-  function fileTermsSearch() {
+  function fileTermsSearch () {
     var terms = fileOutputParse();
-    if (terms.length > 0) {
-      $scope.taxonsList = [];
-      // Query the API each 700 items
-      var chunks = Array.chunk(terms, 700);
-      for (var c in chunks) {
-        var req = { names: chunks[c].join("|"), data_source_ids: $scope.selectedDataSources.join("|")};
-        tRexAPIService.searchTaxons(req).success(taxonSearch_success).error(taxonSearch_error);
+    $scope.error = [];
+    $scope.warning = [];
+    if ($scope.selectedDataSources.length > 0) {
+      if (terms.length > 0) {
+        if (terms.length <= 10000){
+          $scope.processing = true;
+          $scope.taxonsList = [];
+          // Query the API each 700 items
+          var chunks = Array.chunk(terms, 700);
+          for (var c in chunks) {
+            var req = { names: chunks[c].join("|"), data_source_ids: $scope.selectedDataSources.join("|")};
+            tRexAPIService.searchTaxons(req).success(taxonSearch_success).error(taxonSearch_error);
+          }
+        } else {
+          $scope.$apply(function(){
+            $scope.error.push(_getString('errorFileTooBig'));
+          });
+        }
+      } else {
+        $scope.$apply(function(){
+          $scope.error.push(_getString('errorNoTermsOnFile'));
+        });
       }
+    } else {
+      $scope.$apply(function(){
+        $scope.warning.push(_getString('warningnoDataSource'));
+      });
     }
   }
+
+  $scope.getSelectedDataSources = function() {
+    return $scope.selectedDataSources;
+  };
+
+  $scope.check = function(value, checked) {
+    var idx = $scope.selectedDataSources.indexOf(value.id);
+    if (idx >= 0 && !checked) {
+      $scope.selectedDataSources.splice(idx, 1);
+    }
+    if (idx < 0 && checked) {
+      $scope.selectedDataSources.push(value.id);
+    }
+    $scope.dataSourcesTitles = [];
+    for (var sds in $scope.selectedDataSources) {
+      for(var ds in $scope.dataSources) {
+        if ($scope.dataSources[ds].id == $scope.selectedDataSources[sds]){
+          $scope.dataSourcesTitles.push($scope.dataSources[ds].title);
+          break;
+        }
+      }
+    }
+  };
 
   function taxonSearch_success(res) {
     if (res != null && res.data != null && res.data.length > 0) {
@@ -368,11 +427,13 @@ controller('taxonController', function($scope, tRexAPIService){
           });
         }
       });
+      $scope.processing = false;
     }
   }
 
   function taxonSearch_error(res){
     console.log('ERROR on txtTerms_search');
+    $scope.processing = false;
   }
 
   function fileOutputParse() {
@@ -434,7 +495,11 @@ controller('taxonController', function($scope, tRexAPIService){
       "specificEpithet": "epíteto específico",
       "infraspecificEpithet": "epíteto infraespecífico",
       "true": "si",
-      "false": "no"
+      "false": "no",
+      "warningnoDataSource": "Debe seleccionar al menos una fuetne de información",
+      "warningnoData": "No hay datos para procesar, ingrese terminos o cargue un archivo",
+      "errorNoTermsOnFile": "Error, el archivo no tiene terminos para consultar",
+      "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000"
     };
     var enTable = {
       "kingdom": "kingdom",
@@ -448,7 +513,11 @@ controller('taxonController', function($scope, tRexAPIService){
       "specificEpithet": "specific epithet",
       "infraspecificEpithet": "infraspecific epithet",
       "true": "true",
-      "false": "false"
+      "false": "false",
+      "warningnoDataSource": "You must select at least one datasource",
+      "warningnoData": "No data to process, input terms or upload a file",
+      "errorNoTermsOnFile": "Error, no terms on file",
+      "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000"
     };
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;

@@ -49,5 +49,14 @@
   "tblColSubmittedString": "Submitted string",
   "tblColDetails": "Details",
   "lblAcceptedFormats": "Accepted formats: XLSX/CSV",
-  "lblMaxUploadTerms": "10000 maximum"
+  "lblMaxUploadTerms": "10000 maximum",
+  "lblStep1": "Choose datasources",
+  "lblStep2": "Write the terms to resolve by text input or load a list of terms on a file",
+  "lblStep3": "Get and download the results",
+  "btnGeneral": "General",
+  "btnSpecialized": "Specialized",
+  "btnClean": "Clean",
+  "lblAboutDatasources": "Every datasource allows taxon resolution of scientific names or any taxonomical group. Some datasources will add the taxon hierarchy [TH] based on the scientific name  or the \"Life Science Identifier\" [LSID], a persistent and unique global alphanumerical identifier, used on the scientific community to refer to an object.",
+  "lblProcessing": "Processing",
+  "lblSelectedDataSources": "Selected datasources"
 }
