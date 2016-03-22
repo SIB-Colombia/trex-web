@@ -61,7 +61,7 @@
     <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
       <thead>
         <th><%= __('tblColSubmittedString') %></th>
-        <th><%= __('tblColNameMatch') %></th>
+        <th><%= __('tblColMatchType') %></th>
         <th><%= __('tblColNameString') %></th>
         <th><%= __('tblDataSourceTitle') %></th>
         <th><%= __('tblColScore') %></th>
@@ -70,7 +70,7 @@
       <tbody>
           <tr ng-repeat="taxon in taxonsList">
             <td>{{ taxon.supplied_name_string }}</td>
-            <td>{{ taxon.match }}</td>
+            <td>{{ taxon.match_type }}</td>
             <td>{{ taxon.scientificName }}</td>
             <td ng-switch="taxon.has_url">
               <a href="{{ taxon.url }}" target="_blank" ng-switch-when="true">{{ taxon.data_source_title }}</a>

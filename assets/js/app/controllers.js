@@ -303,6 +303,7 @@ controller('taxonController', function($scope, tRexAPIService){
           var taxonRanks =  [ ];
           var taxonClassifications = { };
           var taxonRank = { };
+          console.log(v);
           for(var k in v.results) {
             taxonClassifications = _getTaxonClassification(
                 v.results[k].classification_path.split('|')
@@ -343,6 +344,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , match: _getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
+              , match_type: _getString('match_type' + v.results[k].match_type)
             });
           }
         } else {
@@ -434,7 +436,13 @@ controller('taxonController', function($scope, tRexAPIService){
       "specificEpithet": "epíteto específico",
       "infraspecificEpithet": "epíteto infraespecífico",
       "true": "si",
-      "false": "no"
+      "false": "no",
+      "match_type1": "Match Exacto",
+      "match_type2": "Match exactas de forma canónica de un nombre",
+      "match_type3": "Match fuzzy de la forma canónica",
+      "match_type4": "Parcial Match Exacto por parte de especies de forma canónica",
+      "match_type5": "Parcial Match fuzzy por parte de las especies de forma canónica",
+      "match_type6": "Match Exacto por parte género de una forma canónica"
     };
     var enTable = {
       "kingdom": "kingdom",
@@ -448,7 +456,13 @@ controller('taxonController', function($scope, tRexAPIService){
       "specificEpithet": "specific epithet",
       "infraspecificEpithet": "infraspecific epithet",
       "true": "true",
-      "false": "false"
+      "false": "false",
+      "match_type1": "Exact match",
+      "match_type2": "Exact match by canonical form of a name",
+      "match_type3": "Fuzzy match by canonical form",
+      "match_type4": "Partial exact match by species part of canonical form",
+      "match_type5": "Partial fuzzy match by species part of canonical form",
+      "match_type6": "Exact match by genus part of a canonical form"
     };
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
