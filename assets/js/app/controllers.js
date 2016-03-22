@@ -12,6 +12,7 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.fileReadOutput = null;
   $scope.typeFilter = "general";
   $scope.dataSourcesTitles = [];
+  $scope.taxonDetail = {title: null, keyValue: []};
 
   $scope.lang = navigator.language || navigator.userLanguage;
 
@@ -182,7 +183,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
   $scope.on_search = function (sender){
     $scope.lang = navigator.language || navigator.userLanguage;
-    $scope.warning = [];
+    $scope.error = [];
     switch (sender) {
       case 'btnSearch':
       case 'txtTerms':
@@ -191,10 +192,10 @@ controller('taxonController', function($scope, tRexAPIService){
            $scope.processing = true;
            txtTerms_search(sender);
          } else {
-           $scope.error.push(_getString('warningnoDataSource'));
+           $scope.error.push($scope._getString('warningnoDataSource'));
          }
        } else {
-         $scope.error.push(_getString('warningnoData'));
+         $scope.error.push($scope._getString('warningnoData'));
        }
         break;
       default:
@@ -218,8 +219,16 @@ controller('taxonController', function($scope, tRexAPIService){
   }
 
   $scope.on_clean = function() {
-    console.log("CLEAN");
-    alert("NOT IMPLEMENTED YET");
+    $scope.txtTerms = "";
+    $scope.warning = [];
+    $scope.error = [];
+    $scope.info = [];
+
+  };
+
+  $scope.on_details = function(d){
+    $scope.taxonDetail.title    = $scope.taxonsList[d].scientificName;
+    $scope.taxonDetail.keyValue = $scope.taxonsList[d].raw_response;
   };
 
   function _s2ab(s) {
@@ -264,9 +273,9 @@ controller('taxonController', function($scope, tRexAPIService){
     for (var i = 0;i < $scope.taxonsList.length;i++) {
       row = [];
       for (var key in $scope.taxonsList[i]) {
-        if(key != '$$hashKey'){
+        if(key != '$$hashKey' && key != 'raw_response' && key != 'has_url'){
           if (i == 0) {
-            headers.push(key);
+            headers.push($scope._getString(key));
           }
           row.push($scope.taxonsList[i][key]);
         }
@@ -316,17 +325,17 @@ controller('taxonController', function($scope, tRexAPIService){
           }
         } else {
           $scope.$apply(function(){
-            $scope.error.push(_getString('errorFileTooBig'));
+            $scope.error.push($scope._getString('errorFileTooBig'));
           });
         }
       } else {
         $scope.$apply(function(){
-          $scope.error.push(_getString('errorNoTermsOnFile'));
+          $scope.error.push($scope._getString('errorNoTermsOnFile'));
         });
       }
     } else {
       $scope.$apply(function(){
-        $scope.warning.push(_getString('warningnoDataSource'));
+        $scope.warning.push($scope._getString('warningnoDataSource'));
       });
     }
   }
@@ -381,7 +390,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
             ];
 
-            taxonRank = _getString(_getTaxonRank(taxonRanks));
+            taxonRank = $scope._getString(_getTaxonRank(taxonRanks));
 
             $scope.taxonsList.push({
                 supplied_name_string: v.supplied_name_string
@@ -400,10 +409,24 @@ controller('taxonController', function($scope, tRexAPIService){
               , scientificName: v.results[k].name_string
               , data_source_title: v.results[k].data_source_title
               , score: v.results[k].score
-              , match: _getString(v.is_known_name)
+              , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
+<<<<<<< HEAD
               , match_type: _getString('match_type' + v.results[k].match_type)
+=======
+              , data_source_id: v.results[k].data_source_id
+              , gni_uuid: v.results[k].gni_uuid
+              , canonical_form: v.results[k].canonical_form
+              , classification_path: v.results[k].classification_path
+              , taxon_id: v.results[k].taxon_id
+              , global_id: v.results[k].global_id
+              , local_id: v.results[k].local_id
+              , prescore: v.results[k].prescore
+              , score: v.results[k].score
+              , status: v.results[k].status
+              , raw_response: v.results[k]
+>>>>>>> c44b9c826be7eedd3586c28234be7d5f103aec4c
             });
           }
         } else {
@@ -423,9 +446,20 @@ controller('taxonController', function($scope, tRexAPIService){
             , author: null
             , scientificName: null
             , data_source_title: null
-            , match: _getString(v.is_known_name)
+            , match: $scope._getString(v.is_known_name)
             , url: null
             , has_url: false
+            , data_source_id: null
+            , gni_uuid: null
+            , canonical_form: null
+            , classification_path: null
+            , taxon_id: null
+            , global_id: null
+            , local_id: null
+            , prescore: null
+            , score: null
+            , status: null
+            , raw_response: null
           });
         }
       });
@@ -484,7 +518,7 @@ controller('taxonController', function($scope, tRexAPIService){
     return taxonRank;
   }
 
-  function _getString(key) {
+  $scope._getString = function (key) {
     var esTable = {
       "kingdom": "reino",
       "phylum": "filo",
@@ -507,7 +541,24 @@ controller('taxonController', function($scope, tRexAPIService){
       "warningnoDataSource": "Debe seleccionar al menos una fuetne de información",
       "warningnoData": "No hay datos para procesar, ingrese terminos o cargue un archivo",
       "errorNoTermsOnFile": "Error, el archivo no tiene terminos para consultar",
-      "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000"
+      "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000",
+      "supplied_name_string": "cadena_entrada",
+      "taxonRank": "rango_taxon",
+      "author": "autor",
+      "scientificName": "nombre_cientifico",
+      "data_source_title": "titulo_fuente",
+      "score": "puntaje",
+      "match": "match",
+      "url": "url",
+      "data_source_id": "id_fuente",
+      "gni_uuid": "gni_uuid",
+      "canonical_form": "forma_canonica",
+      "classification_path": "ruta_clasificacion",
+      "taxon_id": "id_taxon",
+      "global_id": "id_global",
+      "local_id": "id_local",
+      "prescore": "pre_puntaje",
+      "status": "status"
     };
     var enTable = {
       "kingdom": "kingdom",
@@ -531,17 +582,34 @@ controller('taxonController', function($scope, tRexAPIService){
       "warningnoDataSource": "You must select at least one datasource",
       "warningnoData": "No data to process, input terms or upload a file",
       "errorNoTermsOnFile": "Error, no terms on file",
-      "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000"
+      "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000",
+      "supplied_name_string": "supplied_string",
+      "taxonRank": "taxon_rank",
+      "author": "author",
+      "scientificName": "scientific_name",
+      "data_source_title": "data_source_title",
+      "score": "score",
+      "match": "match",
+      "url": "url",
+      "data_source_id": "data_source_id",
+      "gni_uuid": "gni_uuid",
+      "canonical_form": "canonical_form",
+      "classification_path": "classification_path",
+      "taxon_id": "taxon_id",
+      "global_id": "global_id",
+      "local_id": "local_id",
+      "prescore": "prescore",
+      "status": "status"
     };
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
     if (isEs){
-      result = esTable[key];
+      result = esTable[key] != undefined ? esTable[key] : key;
     } else {
-      result = enTable[key];
+      result = enTable[key] != undefined ? enTable[key] : key;
     }
     return result;
-  }
+  };
 
   function chunk (arr, len) {
     var chunks = [],
