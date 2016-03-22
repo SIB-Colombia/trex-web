@@ -211,8 +211,6 @@ controller('taxonController', function($scope, tRexAPIService){
 
     var ws = _sheet_from_array_of_arrays(_generateTable());
 
-    console.log(ws);
-
     wb.Sheets[ws_name] = ws;
 
     var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
@@ -274,10 +272,10 @@ controller('taxonController', function($scope, tRexAPIService){
     var headers = [];
     for (var i = 0;i < $scope.taxonsList.length;i++) {
       row = [];
-      for (var key in $scope.taxonsList[i].raw_response) {
-        if(key != '$$hashKey' && key != 'raw_response'){
+      for (var key in $scope.taxonsList[i]) {
+        if(key != '$$hashKey' && key != 'raw_response' && key != 'has_url'){
           if (i == 0) {
-            headers.push(key);
+            headers.push($scope._getString(key));
           }
           row.push($scope.taxonsList[i][key]);
         }
@@ -413,6 +411,16 @@ controller('taxonController', function($scope, tRexAPIService){
               , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
+              , data_source_id: v.results[k].data_source_id
+              , gni_uuid: v.results[k].gni_uuid
+              , canonical_form: v.results[k].canonical_form
+              , classification_path: v.results[k].classification_path
+              , taxon_id: v.results[k].taxon_id
+              , global_id: v.results[k].global_id
+              , local_id: v.results[k].local_id
+              , prescore: v.results[k].prescore
+              , score: v.results[k].score
+              , status: v.results[k].status
               , raw_response: v.results[k]
             });
           }
@@ -436,6 +444,16 @@ controller('taxonController', function($scope, tRexAPIService){
             , match: $scope._getString(v.is_known_name)
             , url: null
             , has_url: false
+            , data_source_id: null
+            , gni_uuid: null
+            , canonical_form: null
+            , classification_path: null
+            , taxon_id: null
+            , global_id: null
+            , local_id: null
+            , prescore: null
+            , score: null
+            , status: null
             , raw_response: null
           });
         }
@@ -512,7 +530,24 @@ controller('taxonController', function($scope, tRexAPIService){
       "warningnoDataSource": "Debe seleccionar al menos una fuetne de información",
       "warningnoData": "No hay datos para procesar, ingrese terminos o cargue un archivo",
       "errorNoTermsOnFile": "Error, el archivo no tiene terminos para consultar",
-      "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000"
+      "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000",
+      "supplied_name_string": "cadena_entrada",
+      "taxonRank": "rango_taxon",
+      "author": "autor",
+      "scientificName": "nombre_cientifico",
+      "data_source_title": "titulo_fuente",
+      "score": "puntaje",
+      "match": "match",
+      "url": "url",
+      "data_source_id": "id_fuente",
+      "gni_uuid": "gni_uuid",
+      "canonical_form": "forma_canonica",
+      "classification_path": "ruta_clasificacion",
+      "taxon_id": "id_taxon",
+      "global_id": "id_global",
+      "local_id": "id_local",
+      "prescore": "pre_puntaje",
+      "status": "status"
     };
     var enTable = {
       "kingdom": "kingdom",
@@ -530,7 +565,24 @@ controller('taxonController', function($scope, tRexAPIService){
       "warningnoDataSource": "You must select at least one datasource",
       "warningnoData": "No data to process, input terms or upload a file",
       "errorNoTermsOnFile": "Error, no terms on file",
-      "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000"
+      "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000",
+      "supplied_name_string": "supplied_string",
+      "taxonRank": "taxon_rank",
+      "author": "author",
+      "scientificName": "scientific_name",
+      "data_source_title": "data_source_title",
+      "score": "score",
+      "match": "match",
+      "url": "url",
+      "data_source_id": "data_source_id",
+      "gni_uuid": "gni_uuid",
+      "canonical_form": "canonical_form",
+      "classification_path": "classification_path",
+      "taxon_id": "taxon_id",
+      "global_id": "global_id",
+      "local_id": "local_id",
+      "prescore": "prescore",
+      "status": "status"
     };
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
