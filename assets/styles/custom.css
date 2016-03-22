@@ -23,11 +23,19 @@
   border-style: dashed;
   border-width: medium;
   border-radius: 2px;
+  /*border-color: rgb(15,14,13);*/
   border-color: gray;
   font-size: 170%;
-  background-color: rgb(227, 208, 204);
+  background-color: rgb(255, 236, 215);
+  color: gray;
 }
 
+/**
+ * Badges
+**/
+.badge {
+  margin-right: 1em;
+}
 /**
  * Table
 **/
@@ -55,7 +63,7 @@
 .no-padding {
   padding: 0;
 }
-/*/
+/**/
 .invisible{
  display:none;
 }

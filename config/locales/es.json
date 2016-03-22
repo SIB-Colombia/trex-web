@@ -49,5 +49,14 @@
   "tblColSubmittedString": "Término de búsqueda",
   "tblColDetails": "Detalles",
   "lblAcceptedFormats": "Formatos aceptados: XLSX/CSV",
-  "lblMaxUploadTerms": "10000 maximum"
+  "lblMaxUploadTerms": "10000 maximum",
+  "lblStep1": "Seleccione las fuentes de información",
+  "lblStep2": "Escriba los términos a resolver a través de la caja de texto o la carga de un listado en un archivo",
+  "lblStep3": "Obtenga y descargue sus resultados",
+  "btnGeneral": "General",
+  "btnSpecialized": "Especializada",
+  "btnClean": "Limpiar",
+  "lblAboutDatasources": "Cada fuetne de información permite la resolución de nombres científicos de cualquier grupo taxonómico. Algunos generan adcionalmente la jerarquía taxonómica [JT] a partir del nombre científico ingresado o el \"Life Science Identifier\" [LSID], un identificador alfanumérico global, único y persistente que es usado en la comunidad científica para referirse a un objeto.",
+  "lblProcessing": "Procesando",
+  "lblSelectedDataSources": "Fuentes seleccionadas"
 }

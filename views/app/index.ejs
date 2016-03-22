@@ -1,87 +1,171 @@
 <div ng-app="taxonApp" ng-controller="taxonController">
 <!-- BEGIN -->
 <div class="">
+  <!-- BEGIN NOTIFICATION PANEL -->
   <div row class="testing">
-    <div column="3" class="testing padding-top-1">
-        <a href="#modal-advanced-search"><%= __('lblAdvancedSearch') %></a>
+    <div column="12" class="alert" ng-repeat="i in info">
+      <p>{{ i }}</p>
     </div>
-    <div column="3 +6" class="testing padding-top-1 text--right">
-        <a href="#"><%= __('lblHowto') %></a>
+    <div column="12" class="alert alert--success" ng-repeat="s in success">
+      <p>{{ s }}</p>
+    </div>
+    <div column="12" class="alert alert--warning" ng-repeat="w in warning">
+      <p>{{ w }}</p>
+    </div>
+    <div column="12" class="alert alert--error" ng-repeat="e in error">
+      <p>{{ e }}</p>
+    </div>
+    <div column="12" ng-if="processing">
+      <p><%= __('lblProcessing') %></p>
+      <div class="progress progress--striped progress--animate">
+        <span style="width: 100%"></span>
+      </div>
     </div>
   </div>
-  <div row class="testing margin-top-1">
-    <div column="5">
-      <textarea name="txtTerms" id="txtTerms" rows="6" ng-model="txtTerms"">
-      </textarea>
-      <p class="input--help"><%= __('lblHelpTerms') %></p>
-      <div column="12" class="text--right no-padding">
+  <!-- END NOTIFICATION PANEL -->
+  <!-- BEGIN UPPER PANEL -->
+  <div row class="testing">
+  <!-- BEGIN LEFT PANEL -->
+  <div column="5" class="testing">
+    <!-- BEGIN STEP 1 MENU-->
+    <div row column="12" class="testing">
+      <div  column="1" class="testing">
+        <span class="badge">1</span>
+      </div>
+      <div column="11" class="testing">
+        <%= __('lblStep1') %>
+      </div>
+      <div column="11 +1" class="testing">
+        <div column="5">
+          <input id="btnGeneral" name="btnGeneral" type="radio" value="general" ng-model="typeFilter" />
+          <label for="btnGeneral"><%= __('btnGeneral') %></label>
+        </div>
+        <div column="2">|</div>
+        <div column="5">
+          <input id="btnSpecialized" name="btnSpecialized" type="radio" value="specialized" ng-model="typeFilter" />
+          <label for="btnSpecialized"><%= __('btnSpecialized') %></label>
+        </div>
+      </div>
+    </div>
+    <!-- END STEP 1 MENU-->
+    <!-- BEGIN STEP 2 -->
+    <div row column="12" class="testing margin-top-1">
+      <div column="1" class="testing">
+        <span class="badge">2</span>
+      </div>
+      <div column="11" class="testing">
+        <%= __('lblStep2') %>
+      </div>
+      <div column="11 +1" class="testing">
+        <textarea name="txtTerms" id="txtTerms" rows="6" placeholder="<%= __('lblHelpTerms') %>" ng-model="txtTerms">
+        </textarea>
+        <!-- BEGIN DRAG N DROP INPUT -->
+        <div class="margin-top-1">
+          <div class="drag-n-drop" id="dragNDrop">
+            <p class="text--center">
+              <%= __('lblDragnDrop') %>
+              <br />
+              <small style="font-size:50%;">
+                <%= __('lblAcceptedFormats') %>
+              </small>
+              <small style="font-size:50%;">
+                <%= __('lblMaxUploadTerms') %>
+              </small>
+            </p>
+          </div>
+          <div column="12" class="no-padding">
+            <p class="input--help"><%= __('lblHelpDragnDrop') %></p>
+            <input type="file" id="flFile"></input>
+          </div>
+        </div>
+        <!-- END DRAG N DROP INPUT -->
+      </div>
+    </div>
+    <!-- END STEP 2 -->
+    <!-- BEGIN BUTTON MENU -->
+    <div row column="12" class="testing text--right">
+      <div column="11 +1">
+        <button id="btnClean" class="button--xsm" ng-model="btnClean" ng-click="on_clean()">
+          <%= __('btnClean') %>
+        </button>
         <button id="btnSearch" class="button--xsm" ng-model="btnSearch" ng-click="on_search('btnSearch')">
           <%= __('btnSearch') %>
         </button>
       </div>
     </div>
-    <div column="2" class="text--center" style="padding-top: 6em;">
-      <p><%= __('lblOr') %></p>
-    </div>
-    <div column="5">
-      <div column="12" class="drag-n-drop" id="dragNDrop">
-        <p class="text--center">
-          <%= __('lblDragnDrop') %>
-          <br />
-          <small style="font-size:50%;">
-            <%= __('lblAcceptedFormats') %>
-          </small>
-          <small style="font-size:50%;">
-            <%= __('lblMaxUploadTerms') %>
-          </small>
+    <!-- END BUTTON MENU -->
+  </div>
+  <!-- END LEFT PANEL -->
+  <!-- BEGIN RIGHT PANEL -->
+  <div column="7" class="testing">
+    <p><%= __('lblAboutDatasources') %></p>
+    <div style="overflow-y:scroll; max-height: 25em; min-height: 25em; padding-top: 1em;">
+        <p ng-repeat="ds in dataSources">
+          <input type="checkbox" id="ds-{{ ds.id }}" checklist-model="getSelectedDataSources()" checklist-value="ds.id" ng-change="check(ds, checked)" ng-if="typeFilter==ds.datasource_type" >
+          <label for="ds-{{ ds.id }}" ng-if="typeFilter==ds.datasource_type">{{ ds.title }}</label>
         </p>
-      </div>
-      <div column="12">
-        <p class="input--help"><%= __('lblHelpDragnDrop') %></p>
-        <input type="file" id="flFile"></input>
-      </div>
     </div>
   </div>
+  <!-- END RIGHT PANEL -->
+  </div>
+  <!-- BEGIN RESULTS PANEL -->
+  <!-- END UPPER PANEL -->
   <div row class="testing margin-top-1">
-    <div>
-      <div column="7">
-        <span style="font-size: 130%;"><%= __('lblResults') %></span><br/ >
+    <!-- BEGIN STEP 3 -->
+    <div column="4" class="testing">
+      <div  column="1" class="testing">
+        <span class="badge">3</span>
       </div>
-      <div column="3 +2" class="testing text--right margin-top-1">
-        <button class="button--xsm" ng-model="btnDownload" ng-click="on_btnDownload_click()"><%= __('btnDownload') %></button>
-        <select name="ddlDownload" style="width: 5em;">
-          <option value="XLSX">XLSX</option>
-          <option value="CSV">CSV</option>
-          <option value="TXT">TXT</option>
-        </select>
+      <div column="11" class="testing">
+        <%= __('lblStep3') %>
       </div>
     </div>
+    <!-- BEGIN DOWNLOAD RESULTS TABLE -->
+    <div column="12" class="testing margin-top-1">
+        <div column="9">
+          <span style="font-size: 130%;"><%= __('lblResults') %></span><br/ >
+          <span class="input--help"><%= __('lblSelectedDataSources') %>: {{ dataSourcesTitles.join(',') }}</span>
+        </div>
+        <div column="3" class="testing text--right">
+          <button class="button--xsm" ng-model="btnDownload" ng-click="on_btnDownload_click()"><%= __('btnDownload') %></button>
+          <select name="ddlDownload" style="width: 5em;">
+            <option value="XLSX">XLSX</option>
+            <option value="CSV">CSV</option>
+            <option value="TXT">TXT</option>
+          </select>
+        </div>
+    </div>
+    <!-- END DOWNLOAD RESULTS TABLE -->
+    <!-- BEGIN TABLE RESULTS -->
+    <div row column="12" class="margin-top-1">
+      <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
+        <thead>
+          <th><%= __('tblColSubmittedString') %></th>
+          <th><%= __('tblColMatchType') %></th>
+          <th><%= __('tblColNameString') %></th>
+          <th><%= __('tblDataSourceTitle') %></th>
+          <th><%= __('tblColScore') %></th>
+          <th><%= __('tblColDetails') %></th>
+        </thead>
+        <tbody>
+            <tr ng-repeat="taxon in taxonsList">
+              <td>{{ taxon.supplied_name_string }}</td>
+              <td>{{ taxon.match_type }}</td>
+              <td>{{ taxon.scientificName }}</td>
+              <td ng-switch="taxon.has_url">
+                <a href="{{ taxon.url }}" target="_blank" ng-switch-when="true">{{ taxon.data_source_title }}</a>
+                <div ng-switch-default>{{ taxon.data_source_title }}</div>
+              </td>
+              <td>{{ taxon.score }}</td>
+              <td><a href="#"><%= __('tblColDetails') %></a></td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- END TABLE RESULTS -->
+    <!-- END STEP 3 -->
   </div>
-  <div row class="testing margin-top-1">
-    <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
-      <thead>
-        <th><%= __('tblColSubmittedString') %></th>
-        <th><%= __('tblColMatchType') %></th>
-        <th><%= __('tblColNameString') %></th>
-        <th><%= __('tblDataSourceTitle') %></th>
-        <th><%= __('tblColScore') %></th>
-        <th><%= __('tblColDetails') %></th>
-      </thead>
-      <tbody>
-          <tr ng-repeat="taxon in taxonsList">
-            <td>{{ taxon.supplied_name_string }}</td>
-            <td>{{ taxon.match_type }}</td>
-            <td>{{ taxon.scientificName }}</td>
-            <td ng-switch="taxon.has_url">
-              <a href="{{ taxon.url }}" target="_blank" ng-switch-when="true">{{ taxon.data_source_title }}</a>
-              <div ng-switch-default>{{ taxon.data_source_title }}</div>
-            </td>
-            <td>{{ taxon.score }}</td>
-            <td><a href="#"><%= __('tblColDetails') %></a></td>
-          </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- END RESULTS PANEL -->
 </div>
 <!-- END -->
 <!-- BEGIN MODAL modal-advanced-search-->
