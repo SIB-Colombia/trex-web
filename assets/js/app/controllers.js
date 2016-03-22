@@ -412,9 +412,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
-<<<<<<< HEAD
               , match_type: _getString('match_type' + v.results[k].match_type)
-=======
               , data_source_id: v.results[k].data_source_id
               , gni_uuid: v.results[k].gni_uuid
               , canonical_form: v.results[k].canonical_form
@@ -426,7 +424,6 @@ controller('taxonController', function($scope, tRexAPIService){
               , score: v.results[k].score
               , status: v.results[k].status
               , raw_response: v.results[k]
->>>>>>> c44b9c826be7eedd3586c28234be7d5f103aec4c
             });
           }
         } else {
