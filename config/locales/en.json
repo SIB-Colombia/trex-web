@@ -58,5 +58,6 @@
   "btnClean": "Clean",
   "lblAboutDatasources": "Every datasource allows taxon resolution of scientific names or any taxonomical group. Some datasources will add the taxon hierarchy [TH] based on the scientific name  or the \"Life Science Identifier\" [LSID], a persistent and unique global alphanumerical identifier, used on the scientific community to refer to an object.",
   "lblProcessing": "Processing",
-  "lblSelectedDataSources": "Selected datasources"
+  "lblSelectedDataSources": "Selected datasources",
+  "lblDetail": "Detail"
 }

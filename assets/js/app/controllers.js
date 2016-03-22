@@ -12,6 +12,7 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.fileReadOutput = null;
   $scope.typeFilter = "general";
   $scope.dataSourcesTitles = [];
+  $scope.taxonDetail = {title: null, keyValue: []};
 
   $scope.lang = navigator.language || navigator.userLanguage;
 
@@ -182,7 +183,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
   $scope.on_search = function (sender){
     $scope.lang = navigator.language || navigator.userLanguage;
-    $scope.warning = [];
+    $scope.error = [];
     switch (sender) {
       case 'btnSearch':
       case 'txtTerms':
@@ -191,10 +192,10 @@ controller('taxonController', function($scope, tRexAPIService){
            $scope.processing = true;
            txtTerms_search(sender);
          } else {
-           $scope.error.push(_getString('warningnoDataSource'));
+           $scope.error.push($scope._getString('warningnoDataSource'));
          }
        } else {
-         $scope.error.push(_getString('warningnoData'));
+         $scope.error.push($scope._getString('warningnoData'));
        }
         break;
       default:
@@ -210,6 +211,8 @@ controller('taxonController', function($scope, tRexAPIService){
 
     var ws = _sheet_from_array_of_arrays(_generateTable());
 
+    console.log(ws);
+
     wb.Sheets[ws_name] = ws;
 
     var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
@@ -218,8 +221,16 @@ controller('taxonController', function($scope, tRexAPIService){
   }
 
   $scope.on_clean = function() {
-    console.log("CLEAN");
-    alert("NOT IMPLEMENTED YET");
+    $scope.txtTerms = "";
+    $scope.warning = [];
+    $scope.error = [];
+    $scope.info = [];
+
+  };
+
+  $scope.on_details = function(d){
+    $scope.taxonDetail.title    = $scope.taxonsList[d].scientificName;
+    $scope.taxonDetail.keyValue = $scope.taxonsList[d].raw_response;
   };
 
   function _s2ab(s) {
@@ -263,8 +274,8 @@ controller('taxonController', function($scope, tRexAPIService){
     var headers = [];
     for (var i = 0;i < $scope.taxonsList.length;i++) {
       row = [];
-      for (var key in $scope.taxonsList[i]) {
-        if(key != '$$hashKey'){
+      for (var key in $scope.taxonsList[i].raw_response) {
+        if(key != '$$hashKey' && key != 'raw_response'){
           if (i == 0) {
             headers.push(key);
           }
@@ -316,17 +327,17 @@ controller('taxonController', function($scope, tRexAPIService){
           }
         } else {
           $scope.$apply(function(){
-            $scope.error.push(_getString('errorFileTooBig'));
+            $scope.error.push($scope._getString('errorFileTooBig'));
           });
         }
       } else {
         $scope.$apply(function(){
-          $scope.error.push(_getString('errorNoTermsOnFile'));
+          $scope.error.push($scope._getString('errorNoTermsOnFile'));
         });
       }
     } else {
       $scope.$apply(function(){
-        $scope.warning.push(_getString('warningnoDataSource'));
+        $scope.warning.push($scope._getString('warningnoDataSource'));
       });
     }
   }
@@ -380,7 +391,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , taxonClassifications.infraSpecificEpithet != null ? 'infraspecificEpithet' : null
             ];
 
-            taxonRank = _getString(_getTaxonRank(taxonRanks));
+            taxonRank = $scope._getString(_getTaxonRank(taxonRanks));
 
             $scope.taxonsList.push({
                 supplied_name_string: v.supplied_name_string
@@ -399,9 +410,10 @@ controller('taxonController', function($scope, tRexAPIService){
               , scientificName: v.results[k].name_string
               , data_source_title: v.results[k].data_source_title
               , score: v.results[k].score
-              , match: _getString(v.is_known_name)
+              , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
+              , raw_response: v.results[k]
             });
           }
         } else {
@@ -421,9 +433,10 @@ controller('taxonController', function($scope, tRexAPIService){
             , author: null
             , scientificName: null
             , data_source_title: null
-            , match: _getString(v.is_known_name)
+            , match: $scope._getString(v.is_known_name)
             , url: null
             , has_url: false
+            , raw_response: null
           });
         }
       });
@@ -482,7 +495,7 @@ controller('taxonController', function($scope, tRexAPIService){
     return taxonRank;
   }
 
-  function _getString(key) {
+  $scope._getString = function (key) {
     var esTable = {
       "kingdom": "reino",
       "phylum": "filo",
@@ -522,12 +535,12 @@ controller('taxonController', function($scope, tRexAPIService){
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
     if (isEs){
-      result = esTable[key];
+      result = esTable[key] != undefined ? esTable[key] : key;
     } else {
-      result = enTable[key];
+      result = enTable[key] != undefined ? enTable[key] : key;
     }
     return result;
-  }
+  };
 
   function chunk (arr, len) {
     var chunks = [],

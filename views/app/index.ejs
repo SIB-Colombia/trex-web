@@ -157,7 +157,7 @@
                 <div ng-switch-default>{{ taxon.data_source_title }}</div>
               </td>
               <td>{{ taxon.score }}</td>
-              <td><a href="#"><%= __('tblColDetails') %></a></td>
+              <td><a href="#modal-details" ng-click="on_details($index)"><%= __('tblColDetails') %></a></td>
             </tr>
         </tbody>
       </table>
@@ -169,20 +169,17 @@
 </div>
 <!-- END -->
 <!-- BEGIN MODAL modal-advanced-search-->
-<div id="modal-advanced-search" class="modal modal--flat">
-  <div class="modal-container" style="width: 48%;">
+<div id="modal-details" class="modal modal--flat">
+  <div class="modal-container" style="width: 50%;">
     <div class="modal-header">
-      <h4><%= __('lblAdvancedSearch') %></h4>
+      <h4><%= __('lblDetail') %>: {{ taxonDetail.title }}</h4>
       <a href="#close" class="modal-close">&times;</a>
     </div>
     <div class="modal-body">
-        <%= __('lblDataSourceOption') %>
-        <p class="input--help">(<%= __('lblAboutDataSourceOption') %>)</p>
         <hr/>
         <div class="colorPalette-backgroundLight" style="overflow-y:scroll; max-height: 20em; padding-top: 1em;">
-          <p ng-repeat="ds in dataSources">
-            <input type="checkbox" id="ds-{{ ds.id }}" checklist-model="selectedDataSources" checklist-value="ds.id" >
-            <label for="ds-{{ ds.id }}">{{ ds.title }}</label>
+          <p ng-repeat="(k, v) in taxonDetail.keyValue">
+            {{ _getString(k) }}: {{ v }}
           </p>
         </div>
     </div>
