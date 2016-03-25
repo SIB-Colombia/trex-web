@@ -11,7 +11,13 @@ module.exports = {
    * `AppController.index()`
    */
 	index: function(req, res){
-		return res.view({});
+		var lang = req.params['lang'];
+		if (lang != undefined && sails.config.i18n.locales.indexOf(lang) >= 0) {
+			req.setLocale(lang);
+		} else {
+			lang = 'en';
+		}
+		return res.view({lang: lang});
 	},
 	/**
    * `AppController.query()`
@@ -19,7 +25,7 @@ module.exports = {
 	query: function(req, res){
 		var restify = require('restify');
 		var tRexClient = restify.createJsonClient({
-			url: "http://52.36.29.146:11080",
+			url: sails.config.connections.trexAPI.url,
 			version: '*'
 		});
 		var data = req.allParams();

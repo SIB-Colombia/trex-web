@@ -14,8 +14,6 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.dataSourcesTitles = [];
   $scope.taxonDetail = {title: null, keyValue: []};
 
-  $scope.lang = navigator.language || navigator.userLanguage;
-
   var X = XLSX;
   var XW = {
   	/* worker message */
@@ -182,7 +180,6 @@ controller('taxonController', function($scope, tRexAPIService){
   });
 
   $scope.on_search = function (sender){
-    $scope.lang = navigator.language || navigator.userLanguage;
     $scope.error = [];
     switch (sender) {
       case 'btnSearch':
@@ -223,7 +220,7 @@ controller('taxonController', function($scope, tRexAPIService){
     $scope.warning = [];
     $scope.error = [];
     $scope.info = [];
-
+    $scope.taxonsList = [];
   };
 
   $scope.on_details = function(d){
@@ -584,6 +581,7 @@ controller('taxonController', function($scope, tRexAPIService){
       "prescore": "prescore",
       "status": "status"
     };
+    console.log($scope.lang);
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
     if (isEs){

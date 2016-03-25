@@ -56,7 +56,7 @@
   "btnGeneral": "General",
   "btnSpecialized": "Especializada",
   "btnClean": "Limpiar",
-  "lblAboutDatasources": "Cada fuetne de información permite la resolución de nombres científicos de cualquier grupo taxonómico. Algunos generan adcionalmente la jerarquía taxonómica [JT] a partir del nombre científico ingresado o el \"Life Science Identifier\" [LSID], un identificador alfanumérico global, único y persistente que es usado en la comunidad científica para referirse a un objeto.",
+  "lblAboutDatasources": "Cada fuente de información permite la resolución de nombres científicos de cualquier grupo taxonómico. Algunos generan adcionalmente la jerarquía taxonómica [JT] a partir del nombre científico ingresado o el \"Life Science Identifier\" [LSID], un identificador alfanumérico global, único y persistente que es usado en la comunidad científica para referirse a un objeto.",
   "lblProcessing": "Procesando",
   "lblSelectedDataSources": "Fuentes seleccionadas",
   "lblDetail": "Detalle"
