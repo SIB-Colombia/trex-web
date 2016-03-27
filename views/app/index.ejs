@@ -128,7 +128,7 @@
         </div>
         <div column="3" class="testing text--right">
           <button class="button--xsm" ng-model="btnDownload" ng-click="on_btnDownload_click()"><%= __('btnDownload') %></button>
-          <select name="ddlDownload" style="width: 5em;">
+          <select ng-model="ddlDownload" name="ddlDownload" style="width: 5em;">
             <option value="XLSX">XLSX</option>
             <option value="CSV">CSV</option>
             <option value="TXT">TXT</option>
@@ -138,25 +138,33 @@
     <!-- END DOWNLOAD RESULTS TABLE -->
     <!-- BEGIN TABLE RESULTS -->
     <div row column="12" class="margin-top-1">
+      <div column="3" class="text--left">
+        <%= __('totalData') %>  {{ dataCount }}
+      </div>
+      <div column="9" class="text--right">
+        <span style="margin-right: 2em"><%= __('actualPage') %>  {{ pageIndex + 1}} <%= __('of') %> {{ maxPages }}</span>
+        <button class="button--xsm" ng-model="btnPrev" ng-click="prevPage()"><%= __('btnPrev') %></button>
+        <button class="button--xsm" ng-model="btnNext" ng-click="nextPage()"><%= __('btnNext') %></button>
+      </div>
       <table id="tblResults" class="table--border table--hoverRow" style="width: 100%;">
         <thead>
           <th><%= __('tblColSubmittedString') %></th>
-          <th><%= __('tblColMatchType') %></th>
           <th><%= __('tblColNameString') %></th>
           <th><%= __('tblDataSourceTitle') %></th>
           <th><%= __('tblColScore') %></th>
+          <th><%= __('tblColMatchType') %></th>
           <th><%= __('tblColDetails') %></th>
         </thead>
         <tbody>
-            <tr ng-repeat="taxon in taxonsList">
+            <tr ng-repeat="taxon in pages[pageIndex]">
               <td>{{ taxon.supplied_name_string }}</td>
-              <td>{{ taxon.match_type }}</td>
               <td>{{ taxon.scientificName }}</td>
               <td ng-switch="taxon.has_url">
                 <a href="{{ taxon.url }}" target="_blank" ng-switch-when="true">{{ taxon.data_source_title }}</a>
                 <div ng-switch-default>{{ taxon.data_source_title }}</div>
               </td>
               <td>{{ taxon.score }}</td>
+              <td>{{ taxon.match_type }}</td>
               <td><a href="#modal-details" ng-click="on_details($index)"><%= __('tblColDetails') %></a></td>
             </tr>
         </tbody>

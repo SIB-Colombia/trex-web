@@ -13,6 +13,10 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.typeFilter = "general";
   $scope.dataSourcesTitles = [];
   $scope.taxonDetail = {title: null, keyValue: []};
+  $scope.pages = [];
+  $scope.pageIndex = 0;
+  $scope.dataCount = 0;
+  $scope.maxPages = 0;
 
   $scope.lang = navigator.language || navigator.userLanguage;
 
@@ -115,8 +119,6 @@ controller('taxonController', function($scope, tRexAPIService){
   	workbook.SheetNames.forEach(function(sheetName) {
   		var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
   		if(csv.length > 0){
-  			result.push("SHEET: " + sheetName);
-  			result.push("");
   			result.push(csv);
   		}
   	});
@@ -133,12 +135,22 @@ controller('taxonController', function($scope, tRexAPIService){
   		var name = f.name;
   		reader.onload = function(e) {
   			var data = e.target.result;
-  			var wb;
-  			wb = X.read(data, {type: 'binary'});
-  			$scope.fileReadOutput = to_json(wb);
-        fileTermsSearch();
+        var wb;
+        if (name.indexOf('.csv') > -1) {
+          wb = data.split("\n");
+          fileTermsSearch(wb, 'csv');
+        } else if (name.indexOf('.xlsx') > -1) {
+          wb = X.read(data, {type: 'binary'});
+          $scope.fileReadOutput = to_json(wb);
+          fileTermsSearch(null, null);
+        }
   		};
-  		reader.readAsBinaryString(f);
+      if (name.indexOf('.csv') > -1){
+            // xlsx导出的CSV 文件一般是GBK编码
+            reader.readAsText(f, 'GB18030');
+        }else{
+            reader.readAsBinaryString(f);
+        }
   	}
   }
 
@@ -163,11 +175,21 @@ controller('taxonController', function($scope, tRexAPIService){
   		reader.onload = function(e) {
   			var data = e.target.result;
   			var wb;
-  			wb = X.read(data, {type: 'binary'});
-        $scope.fileReadOutput = to_json(wb);
-        fileTermsSearch();
+        if (name.indexOf('.csv') > -1) {
+          wb = data.split("\n");
+          fileTermsSearch(wb, 'csv');
+        } else if (name.indexOf('.xlsx') > -1) {
+          wb = X.read(data, {type: 'binary'});
+          $scope.fileReadOutput = to_json(wb);
+          fileTermsSearch(null, null);
+        }
   		};
-  		reader.readAsBinaryString(f);
+      if (name.indexOf('.csv') > -1){
+            // xlsx导出的CSV 文件一般是GBK编码
+            reader.readAsText(f, 'GB18030');
+        }else{
+            reader.readAsBinaryString(f);
+        }
   	}
   }
 
@@ -204,18 +226,50 @@ controller('taxonController', function($scope, tRexAPIService){
   }
 
   $scope.on_btnDownload_click = function () {
-    var ws_name = "results";
-    var wb = new Workbook();
+    var type = $scope.ddlDownload;
+    if (type == 'XLSX') {
+      var ws_name = "results";
+      var wb = new Workbook();
 
-    wb.SheetNames.push(ws_name);
+      wb.SheetNames.push(ws_name);
 
-    var ws = _sheet_from_array_of_arrays(_generateTable());
+      var ws = _sheet_from_array_of_arrays(_generateTable());
 
-    wb.Sheets[ws_name] = ws;
+      wb.Sheets[ws_name] = ws;
 
-    var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
+      var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
 
-    saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
+    }
+    else if (type == 'CSV') {
+      var ws_name = "results";
+      var wb = new Workbook();
+
+      wb.SheetNames.push(ws_name);
+
+      var ws = _sheet_from_array_of_arrays(_generateTable());
+
+      wb.Sheets[ws_name] = ws;
+
+      var wbout = to_csv(wb);
+
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.csv");
+    }
+    else if (type == "TXT") {
+      var ws_name = "results";
+      var wb = new Workbook();
+
+      wb.SheetNames.push(ws_name);
+
+      var ws = _sheet_from_array_of_arrays(_generateTable());
+
+      wb.Sheets[ws_name] = ws;
+
+      var wbout = to_csv(wb).replace(/,/g, '\t');;
+
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.txt");
+    }
+
   }
 
   $scope.on_clean = function() {
@@ -308,8 +362,14 @@ controller('taxonController', function($scope, tRexAPIService){
      }
   }
 
-  function fileTermsSearch () {
-    var terms = fileOutputParse();
+  function fileTermsSearch (array, type) {
+    var terms;
+    if (type == 'csv') {
+      terms = array;
+    } else {
+      terms = fileOutputParse();
+    }
+
     $scope.error = [];
     $scope.warning = [];
     if ($scope.selectedDataSources.length > 0) {
@@ -412,7 +472,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
               , has_url: v.results[k].url != undefined
-              , match_type: _getString('match_type' + v.results[k].match_type)
+              , match_type: $scope._getString('match_type' + v.results[k].match_type)
               , data_source_id: v.results[k].data_source_id
               , gni_uuid: v.results[k].gni_uuid
               , canonical_form: v.results[k].canonical_form
@@ -447,6 +507,7 @@ controller('taxonController', function($scope, tRexAPIService){
             , url: null
             , has_url: false
             , data_source_id: null
+            , match_type: null
             , gni_uuid: null
             , canonical_form: null
             , classification_path: null
@@ -460,6 +521,11 @@ controller('taxonController', function($scope, tRexAPIService){
           });
         }
       });
+      var data = $scope.taxonsList;
+      $scope.pages = Array.chunk(data, 10);
+      $scope.maxPages = $scope.pages.length;
+      $scope.pageIndex = 0;
+      $scope.dataCount = data.length;
       $scope.processing = false;
     }
   }
@@ -529,12 +595,12 @@ controller('taxonController', function($scope, tRexAPIService){
       "infraspecificEpithet": "epíteto infraespecífico",
       "true": "si",
       "false": "no",
-      "match_type1": "Match Exacto",
-      "match_type2": "Match exactas de forma canónica de un nombre",
-      "match_type3": "Match fuzzy de la forma canónica",
-      "match_type4": "Parcial Match Exacto por parte de especies de forma canónica",
-      "match_type5": "Parcial Match fuzzy por parte de las especies de forma canónica",
-      "match_type6": "Match Exacto por parte género de una forma canónica",
+      "match_type1": "Coincidencia exacta",
+      "match_type2": "Coincidencia exacta del nombre canónico",
+      "match_type3": "Coincidencia aproximada del nombre canónico",
+      "match_type4": "Coincidencia exacta de partes del nombre",
+      "match_type5": "Coincidencia aproximada de partes del nombre",
+      "match_type6": "Coincidencia exacta del Género o partes del nombre",
       "warningnoDataSource": "Debe seleccionar al menos una fuetne de información",
       "warningnoData": "No hay datos para procesar, ingrese terminos o cargue un archivo",
       "errorNoTermsOnFile": "Error, el archivo no tiene terminos para consultar",
@@ -570,12 +636,12 @@ controller('taxonController', function($scope, tRexAPIService){
       "infraspecificEpithet": "infraspecific epithet",
       "true": "true",
       "false": "false",
-      "match_type1": "Exact match",
-      "match_type2": "Exact match by canonical form of a name",
-      "match_type3": "Fuzzy match by canonical form",
-      "match_type4": "Partial exact match by species part of canonical form",
-      "match_type5": "Partial fuzzy match by species part of canonical form",
-      "match_type6": "Exact match by genus part of a canonical form",
+      "match_type1": "Exact Matching",
+      "match_type2": "Exact Matching of Canonical Forms",
+      "match_type3": "Fuzzy Matching of Canonical Forms",
+      "match_type4": "Exact Matching of Specific Parts of Names",
+      "match_type5": "Fuzzy Matching of Specific Parts of Names",
+      "match_type6": "Exact Matching of Genus Part of Names",
       "warningnoDataSource": "You must select at least one datasource",
       "warningnoData": "No data to process, input terms or upload a file",
       "errorNoTermsOnFile": "Error, no terms on file",
@@ -619,4 +685,16 @@ controller('taxonController', function($scope, tRexAPIService){
   }
 
   Array.chunk = chunk;
+
+  $scope.nextPage = function () {
+    if (($scope.maxPages - 1) > $scope.pageIndex) {
+      $scope.pageIndex = $scope.pageIndex + 1;
+    }
+  };
+
+  $scope.prevPage = function () {
+    if (0 < $scope.pageIndex) {
+      $scope.pageIndex = $scope.pageIndex - 1;
+    }
+  };
 });

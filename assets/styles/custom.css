@@ -67,6 +67,10 @@
 .invisible{
  display:none;
 }
+
+.footer{
+  background-color: black;
+}
 /*
 .testing {
   border-style: dashed;
