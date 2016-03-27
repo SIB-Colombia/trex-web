@@ -36,11 +36,6 @@ module.exports.routes = {
       controller: 'app'
     , action: 'index'
   }
-  , '/query': {
-     controller: 'app'
-   , action: 'query'
-  }
-
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
@@ -50,6 +45,10 @@ module.exports.routes = {
   * for configuration options and examples.                                  *
   *                                                                          *
   ***************************************************************************/
+  , '/query': {
+     controller: 'app'
+   , action: 'query'
+  }
   , '/about': {
       controller: 'home'
     , action: 'about'
@@ -61,5 +60,9 @@ module.exports.routes = {
   , 'contact': {
       controller: 'home'
     , action: 'contact'
+  }
+  , '/:lang': {
+      controller: 'app'
+    , action: 'index'
   }
 };
