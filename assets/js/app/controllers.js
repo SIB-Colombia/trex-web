@@ -17,6 +17,7 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.pageIndex = 0;
   $scope.dataCount = 0;
   $scope.maxPages = 0;
+  $scope.listdonwloads = [ "XLSX", "CSV", "TXT"];
 
   var X = XLSX;
   var XW = {

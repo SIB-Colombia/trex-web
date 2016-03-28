@@ -129,10 +129,8 @@
         </div>
         <div column="3" class="testing text--right">
           <button class="button--xsm" ng-model="btnDownload" ng-click="on_btnDownload_click()"><%= __('btnDownload') %></button>
-          <select ng-model="ddlDownload" name="ddlDownload" style="width: 5em;">
-            <option value="XLSX">XLSX</option>
-            <option value="CSV">CSV</option>
-            <option value="TXT">TXT</option>
+          <select ng-model="ddlDownload" name="ddlDownload" style="width: 5em;" ng-options="option for option in listdonwloads" ng-init="ddlDownload = listdonwloads[0]" >
+
           </select>
         </div>
     </div>
