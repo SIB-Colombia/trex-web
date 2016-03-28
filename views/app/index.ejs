@@ -22,10 +22,13 @@
         <span style="width: 100%"></span>
       </div>
     </div>
+    <div column="12" class="text--right">
+      <a href="#modal-howto"><%= __('lblHowto') %></a>
+    </div>
   </div>
   <!-- END NOTIFICATION PANEL -->
   <!-- BEGIN UPPER PANEL -->
-  <div row class="testing">
+  <div row class="testing margin-top-1">
   <!-- BEGIN LEFT PANEL -->
   <div column="5" class="testing">
     <!-- BEGIN STEP 1 MENU-->
@@ -196,4 +199,22 @@
   </div>
 </div>
 <!-- END modal-advanced-search -->
+<!-- BEGIN MODAL modal-howto-->
+<div id="modal-howto" class="modal modal--flat">
+  <div class="modal-container" style="width: 70%;">
+    <div class="modal-header">
+      <h4><%= __('lblHowto') %></h4>
+      <a href="#close" class="modal-close">&times;</a>
+    </div>
+    <div class="modal-body">
+        <hr/>
+        <img src="/images/<%= __('HowtoImage') %>" class="media--fluid" >
+    </div>
+    <div class="modal-footer" style="min-height:7em;">
+      <a href="#close" class="modal-close"><button>Ok</button></a>
+    </div>
+  </div>
+</div>
+<!-- END modal-howto -->
+
 </div>
