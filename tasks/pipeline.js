@@ -28,6 +28,10 @@ var jsFilesToInject = [
   // Load sails.io before everything else
   'js/dependencies/sails.io.js',
 
+  '/bower_components/angular/angular.min.js',
+  '/bower_components/js-xlsx/dist/xlsx.core.min.js',
+  '/bower_components/checklist-model/checklist-model.js',
+
   // Dependencies like jQuery, or Angular are brought in here
   'js/dependencies/**/*.js',
 
@@ -71,5 +75,3 @@ module.exports.jsFilesToInject = jsFilesToInject.map(function(jsPath) {
 module.exports.templateFilesToInject = templateFilesToInject.map(function(tplPath) {
   return require('path').join('assets/',tplPath);
 });
-
-

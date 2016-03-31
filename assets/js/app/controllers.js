@@ -20,29 +20,9 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.listdonwloads = [ "XLSX", "CSV", "TXT"];
 
   var X = XLSX;
-  var XW = {
-  	/* worker message */
-  	msg: 'xlsx',
-  	/* worker scripts */
-  	rABS: './xlsxworker2.js',
-  	norABS: './xlsxworker1.js',
-  	noxfer: './xlsxworker.js'
-  };
-
   var drop = document.getElementById('dragNDrop');
   var xlf = document.getElementById('flFile');
-
-  var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
-  var use_worker = typeof Worker !== 'undefined';
-  var transferable = use_worker;
-  var wtf_mode = false;
-
-  function fixdata(data) {
-  	var o = "", l = 0, w = 10240;
-  	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
-  	o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
-  	return o;
-  }
+  var rABS = true;
 
   function ab2str(data) {
   	var o = "", l = 0, w = 10240;
@@ -55,51 +35,6 @@ controller('taxonController', function($scope, tRexAPIService){
   	var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
   	for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
   	return [v, b];
-  }
-
-  function xw_noxfer(data, cb) {
-  	var worker = new Worker(XW.noxfer);
-  	worker.onmessage = function(e) {
-  		switch(e.data.t) {
-  			case 'ready': break;
-  			case 'e': console.error(e.data.d); break;
-  			case XW.msg: cb(JSON.parse(e.data.d)); break;
-  		}
-  	};
-  	var arr = rABS ? data : btoa(fixdata(data));
-  	worker.postMessage({d:arr,b:rABS});
-  }
-
-  function xw_xfer(data, cb) {
-  	var worker = new Worker(rABS ? XW.rABS : XW.norABS);
-  	worker.onmessage = function(e) {
-  		switch(e.data.t) {
-  			case 'ready': break;
-  			case 'e': console.error(e.data.d); break;
-  			default: xx=ab2str(e.data).replace(/\n/g,"\\n").replace(/\r/g,"\\r"); console.log("done"); cb(JSON.parse(xx)); break;
-  		}
-  	};
-  	if(rABS) {
-  		var val = s2ab(data);
-  		worker.postMessage(val[1], [val[1]]);
-  	} else {
-  		worker.postMessage(data, [data]);
-  	}
-  }
-
-  function xw(data, cb) {
-  	transferable = document.getElementsByName("xferable")[0].checked;
-  	if(transferable) xw_xfer(data, cb);
-  	else xw_noxfer(data, cb);
-  }
-
-  function get_radio_value( radioName ) {
-  	var radios = document.getElementsByName( radioName );
-  	for( var i = 0; i < radios.length; i++ ) {
-  		if( radios[i].checked || radios.length === 1 ) {
-  			return radios[i].value;
-  		}
-  	}
   }
 
   function to_json(workbook) {
@@ -144,12 +79,11 @@ controller('taxonController', function($scope, tRexAPIService){
           fileTermsSearch(null, null);
         }
   		};
-      if (name.indexOf('.csv') > -1){
-            // xlsx导出的CSV 文件一般是GBK编码
-            reader.readAsText(f, 'GB18030');
-        }else{
-            reader.readAsBinaryString(f);
-        }
+      if (name.indexOf('.csv') > -1) {
+        reader.readAsText(f, 'GB18030');
+      } else {
+        reader.readAsBinaryString(f);
+      }
   	}
   }
 
@@ -237,7 +171,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
 
-      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
+      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
     }
     else if (type == 'CSV') {
       var ws_name = "results";
@@ -251,7 +185,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = to_csv(wb);
 
-      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.csv");
+      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.csv");
     }
     else if (type == "TXT") {
       var ws_name = "results";
@@ -265,7 +199,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = to_csv(wb).replace(/,/g, '\t');;
 
-      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.txt");
+      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.txt");
     }
 
   }
@@ -282,13 +216,6 @@ controller('taxonController', function($scope, tRexAPIService){
     $scope.taxonDetail.title    = $scope.taxonsList[d].scientificName;
     $scope.taxonDetail.keyValue = $scope.taxonsList[d].raw_response;
   };
-
-  function _s2ab(s) {
-  	var buf = new ArrayBuffer(s.length);
-  	var view = new Uint8Array(buf);
-  	for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
-  	return buf;
-  }
 
   function _sheet_from_array_of_arrays(data, opts) {
   	var ws = {};
@@ -599,7 +526,7 @@ controller('taxonController', function($scope, tRexAPIService){
       "match_type4": "Coincidencia exacta de partes del nombre",
       "match_type5": "Coincidencia aproximada de partes del nombre",
       "match_type6": "Coincidencia exacta del Género o partes del nombre",
-      "warningnoDataSource": "Debe seleccionar al menos una fuetne de información",
+      "warningnoDataSource": "Debe seleccionar al menos una fuente de información",
       "warningnoData": "No hay datos para procesar, ingrese terminos o cargue un archivo",
       "errorNoTermsOnFile": "Error, el archivo no tiene terminos para consultar",
       "errorFileTooBig": "Error, el archivo tiene más de 10000 términos para consultar, intente realizar sus consultas en grupos de 10000",
@@ -662,7 +589,7 @@ controller('taxonController', function($scope, tRexAPIService){
       "prescore": "prescore",
       "status": "status"
     };
-    console.log($scope.lang);
+
     var result = key;
     var isEs = $scope.lang.indexOf("es") > -1;
     if (isEs){
