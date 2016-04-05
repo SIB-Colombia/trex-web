@@ -20,22 +20,11 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.listdonwloads = [ "XLSX", "CSV", "TXT"];
 
   var X = XLSX;
+
   var drop = document.getElementById('dragNDrop');
   var xlf = document.getElementById('flFile');
+
   var rABS = true;
-
-  function ab2str(data) {
-  	var o = "", l = 0, w = 10240;
-  	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
-  	o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
-  	return o;
-  }
-
-  function s2ab(s) {
-  	var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
-  	for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
-  	return [v, b];
-  }
 
   function to_json(workbook) {
   	var result = {};
@@ -79,11 +68,11 @@ controller('taxonController', function($scope, tRexAPIService){
           fileTermsSearch(null, null);
         }
   		};
-      if (name.indexOf('.csv') > -1) {
-        reader.readAsText(f, 'GB18030');
-      } else {
-        reader.readAsBinaryString(f);
-      }
+      if (name.indexOf('.csv') > -1){
+            reader.readAsText(f, 'GB18030');
+        }else{
+            reader.readAsBinaryString(f);
+        }
   	}
   }
 
@@ -118,7 +107,6 @@ controller('taxonController', function($scope, tRexAPIService){
         }
   		};
       if (name.indexOf('.csv') > -1){
-            // xlsx导出的CSV 文件一般是GBK编码
             reader.readAsText(f, 'GB18030');
         }else{
             reader.readAsBinaryString(f);
@@ -130,7 +118,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
   tRexAPIService.tRexDataSourcesExtraData().success(function (res){
     res.forEach(function(v,k){
-      $scope.dataSources.push({ id:v.id, title: v.title, datasource_type: v.datasource_type });
+      $scope.dataSources.push({ id:v.id, title: v.title, datasource_type: v.datasource_type, classification_path_ranks_unbox: v.classification_path_ranks_unbox });
     });
   }).error(function (err) {
     console.log("Error getting data sources");
@@ -171,7 +159,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = XLSX.write(wb, {bookType:"xlsx", bookSST:true, type:'binary'});
 
-      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.xlsx");
     }
     else if (type == 'CSV') {
       var ws_name = "results";
@@ -185,7 +173,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = to_csv(wb);
 
-      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.csv");
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.csv");
     }
     else if (type == "TXT") {
       var ws_name = "results";
@@ -199,7 +187,7 @@ controller('taxonController', function($scope, tRexAPIService){
 
       var wbout = to_csv(wb).replace(/,/g, '\t');;
 
-      saveAs(new Blob([s2ab(wbout)], {type:"application/octect-stream"}), "results.txt");
+      saveAs(new Blob([_s2ab(wbout)], {type:"application/octect-stream"}), "results.txt");
     }
 
   }
@@ -215,7 +203,25 @@ controller('taxonController', function($scope, tRexAPIService){
   $scope.on_details = function(d){
     $scope.taxonDetail.title    = $scope.taxonsList[d].scientificName;
     $scope.taxonDetail.keyValue = $scope.taxonsList[d].raw_response;
+    // Adding taxon hiearchy to raw_response
+    $scope.taxonDetail.keyValue.kingdom = $scope.taxonsList[d].kingdom;
+    $scope.taxonDetail.keyValue.phylum = $scope.taxonsList[d].phylum;
+    $scope.taxonDetail.keyValue.order = $scope.taxonsList[d].order;
+    $scope.taxonDetail.keyValue.phylum = $scope.taxonsList[d].class;
+    $scope.taxonDetail.keyValue.family = $scope.taxonsList[d].family;
+    $scope.taxonDetail.keyValue.genus = $scope.taxonsList[d].genus;
+    $scope.taxonDetail.keyValue.species = $scope.taxonsList[d].species;
+    $scope.taxonDetail.keyValue.subspecies = $scope.taxonsList[d].subspecies;
+    $scope.taxonDetail.keyValue.specificEpithet = $scope.taxonsList[d].specificEpithet;
+    $scope.taxonDetail.keyValue.infraSpecificEpithet = $scope.taxonsList[d].infraSpecificEpithet;
   };
+
+  function _s2ab(s) {
+  	var buf = new ArrayBuffer(s.length);
+  	var view = new Uint8Array(buf);
+  	for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+  	return buf;
+  }
 
   function _sheet_from_array_of_arrays(data, opts) {
   	var ws = {};
@@ -299,7 +305,7 @@ controller('taxonController', function($scope, tRexAPIService){
     $scope.warning = [];
     if ($scope.selectedDataSources.length > 0) {
       if (terms.length > 0) {
-        if (terms.length <= 10000){
+        if (terms.length <= 10000) {
           $scope.processing = true;
           $scope.taxonsList = [];
           // Query the API each 700 items
@@ -309,17 +315,17 @@ controller('taxonController', function($scope, tRexAPIService){
             tRexAPIService.searchTaxons(req).success(taxonSearch_success).error(taxonSearch_error);
           }
         } else {
-          $scope.$apply(function(){
+          $scope.$apply(function() {
             $scope.error.push($scope._getString('errorFileTooBig'));
           });
         }
       } else {
-        $scope.$apply(function(){
+        $scope.$apply(function() {
           $scope.error.push($scope._getString('errorNoTermsOnFile'));
         });
       }
     } else {
-      $scope.$apply(function(){
+      $scope.$apply(function() {
         $scope.warning.push($scope._getString('warningnoDataSource'));
       });
     }
@@ -356,11 +362,19 @@ controller('taxonController', function($scope, tRexAPIService){
           var taxonRanks =  [ ];
           var taxonClassifications = { };
           var taxonRank = { };
-          console.log(v);
+          var data_source_unboxing = null;
           for(var k in v.results) {
+            data_source_unboxing = null;
+            for(var i in $scope.dataSources) {
+              if ($scope.dataSources[i].id == v.results[k].data_source_id) {
+                data_source_unboxing = $scope.dataSources[i].classification_path_ranks_unbox;
+                break;
+              }
+            }
+
             taxonClassifications = _getTaxonClassification(
-                v.results[k].classification_path.split('|')
-              , v.results[k].classification_path_ranks.split('|'));
+                  data_source_unboxing != null ? v.results[k].classification_path.split(data_source_unboxing.separator) : null
+                , data_source_unboxing != null ? data_source_unboxing.indexes : null);
 
             taxonRanks = [
                 taxonClassifications.kingdom != null ? 'kingdom' : null
@@ -478,20 +492,37 @@ controller('taxonController', function($scope, tRexAPIService){
     return terms;
   }
 
-  function _getTaxonClassification(path, rank){
+  function _getTaxonClassification(path, indexes){
     //looking for ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species', 'subspecies'];
-    return {
-      kingdom: path[rank.indexOf('kingdom')],
-      phylum: path[rank.indexOf('phylum')],
-      class: path[rank.indexOf('class')],
-      order: path[rank.indexOf('order')],
-      family: path[rank.indexOf('family')],
-      genus: path[rank.indexOf('genus')],
-      species: path[rank.indexOf('species')],
-      subspecies: path[rank.indexOf('subspecies')],
+    var returnObj = {
+      kingdom: null,
+      phylum: null,
+      class: null,
+      order: null,
+      family: null,
+      genus: null,
+      species: null,
+      subspecies: null,
       specificEpithet: null,
-      infraSpecificEpithet: null
+      infraSpecificEpithet: null,
     };
+
+    if ((path != undefined && path != null) || (indexes != undefined && indexes != null)) {
+      returnObj = {
+        kingdom: indexes.kingdom >= 0 ? path[indexes.kingdom]: null,
+        phylum: indexes.phylum >= 0 ? path[indexes.phylum]: null,
+        class: indexes.class >= 0 ? path[indexes.class]: null,
+        order: indexes.order >= 0 ? path[indexes.order]: null,
+        family: indexes.family >= 0 ? path[indexes.family]: null,
+        genus: indexes.genus >= 0 ? path[indexes.genus]: null,
+        species: indexes.species >= 0 ? path[indexes.species]: null,
+        subspecies: indexes.subspecies >= 0 ? path[indexes.subspecies]: null,
+        specificEpithet: indexes.specificEpithet >= 0 ? path[indexes.specificEpithet]: null,
+        infraSpecificEpithet: indexes.infraSpecificEpithet >= 0 ? path[indexes.infraSpecificEpithet]: null,
+      };
+    }
+
+    return returnObj;
   }
 
   function _getTaxonRank(taxonRanks) {
@@ -517,7 +548,7 @@ controller('taxonController', function($scope, tRexAPIService){
       "species": "especie",
       "subspecies": "subespecie",
       "specificEpithet": "epíteto específico",
-      "infraspecificEpithet": "epíteto infraespecífico",
+      "infraSpecificEpithet": "epíteto infraespecífico",
       "true": "si",
       "false": "no",
       "match_type1": "Coincidencia exacta",
@@ -537,16 +568,35 @@ controller('taxonController', function($scope, tRexAPIService){
       "data_source_title": "titulo_fuente",
       "score": "puntaje",
       "match": "match",
+      "id": "id",
       "url": "url",
-      "data_source_id": "id_fuente",
-      "gni_uuid": "gni_uuid",
+      "data_sources": "fuente_datos",
+      "context": "contexto",
+      "context_data_source_id": "fuente_datos_contexto_id",
+      "context_clade": "contexto_clado",
+      "data": "dato",
+      "supplied_name_string": "nombre_cadena_entregada",
+      "is_known_name": "es_nombre_conocido",
+      "supplied_id": "id_entregado",
+      "results": "resultados",
+      "data_source_id": "fuente_datos_id",
+      "gni_uuid": "uuid_gni",
+      "name_string": "nombre_cadena",
       "canonical_form": "forma_canonica",
       "classification_path": "ruta_clasificacion",
+      "classification_path_ranks": "rango_ruta_clasificacion",
+      "classification_path_ids": "ids_ruta_clasificacion",
       "taxon_id": "id_taxon",
-      "global_id": "id_global",
       "local_id": "id_local",
+      "global_id": "id_global",
+      "match_type": "tipo_match",
       "prescore": "pre_puntaje",
-      "status": "status"
+      "score": "puntaje",
+      "status": "estatus",
+      "status_message": "mensaje_estatus",
+      "edit_distance": "distancia_editar",
+      "current_taxon_id": "id_actual_taxon",
+      "current_name_string": "nombre_cadena_actual"
     };
     var enTable = {
       "kingdom": "kingdom",
@@ -571,23 +621,40 @@ controller('taxonController', function($scope, tRexAPIService){
       "warningnoData": "No data to process, input terms or upload a file",
       "errorNoTermsOnFile": "Error, no terms on file",
       "errorFileTooBig": "Error, the file contains more than 10000 terms, try again in groups of 10000",
-      "supplied_name_string": "supplied_string",
       "taxonRank": "taxon_rank",
       "author": "author",
       "scientificName": "scientific_name",
       "data_source_title": "data_source_title",
-      "score": "score",
       "match": "match",
+      "id": "id",
       "url": "url",
+      "data_sources": "data_sources",
+      "context": "context",
+      "context_data_source_id": "context_data_source_id",
+      "context_clade": "context_clade",
+      "data": "data",
+      "supplied_name_string": "supplied_name_string",
+      "is_known_name": "is_known_name",
+      "supplied_id": "supplied_id",
+      "results": "results",
       "data_source_id": "data_source_id",
       "gni_uuid": "gni_uuid",
+      "name_string": "name_string",
       "canonical_form": "canonical_form",
       "classification_path": "classification_path",
+      "classification_path_ranks": "classification_path_ranks",
+      "classification_path_ids": "classification_path_ids",
       "taxon_id": "taxon_id",
-      "global_id": "global_id",
       "local_id": "local_id",
+      "global_id": "global_id",
+      "match_type": "match_type",
       "prescore": "prescore",
-      "status": "status"
+      "score": "score",
+      "status": "status",
+      "status_message": "status_message",
+      "edit_distance": "edit_distance",
+      "current_taxon_id": "current_taxon_id",
+      "current_name_string": "current_name_string"
     };
 
     var result = key;
