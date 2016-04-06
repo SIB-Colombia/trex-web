@@ -118,7 +118,14 @@ controller('taxonController', function($scope, tRexAPIService){
 
   tRexAPIService.tRexDataSourcesExtraData().success(function (res){
     res.forEach(function(v,k){
-      $scope.dataSources.push({ id:v.id, title: v.title, datasource_type: v.datasource_type, classification_path_ranks_unbox: v.classification_path_ranks_unbox });
+      $scope.dataSources.push({
+        id:v.id,
+        title: v.title,
+        datasource_type: v.datasource_type,
+        lsid: v.lsid,
+        lsid_computations: v.lsid_computations,
+        classification_path_ranks_unbox: v.classification_path_ranks_unbox
+      });
     });
   }).error(function (err) {
     console.log("Error getting data sources");
@@ -200,20 +207,22 @@ controller('taxonController', function($scope, tRexAPIService){
     $scope.taxonsList = [];
   };
 
-  $scope.on_details = function(d){
-    $scope.taxonDetail.title    = $scope.taxonsList[d].scientificName;
-    $scope.taxonDetail.keyValue = $scope.taxonsList[d].raw_response;
+  $scope.on_details = function(d) {
+    $scope.taxonDetail.title    = emptyStrIfNull($scope.taxonsList[d].scientificName);
+    $scope.taxonDetail.keyValue = emptyStrIfNull($scope.taxonsList[d].raw_response);
     // Adding taxon hiearchy to raw_response
-    $scope.taxonDetail.keyValue.kingdom = $scope.taxonsList[d].kingdom;
-    $scope.taxonDetail.keyValue.phylum = $scope.taxonsList[d].phylum;
-    $scope.taxonDetail.keyValue.order = $scope.taxonsList[d].order;
-    $scope.taxonDetail.keyValue.phylum = $scope.taxonsList[d].class;
-    $scope.taxonDetail.keyValue.family = $scope.taxonsList[d].family;
-    $scope.taxonDetail.keyValue.genus = $scope.taxonsList[d].genus;
-    $scope.taxonDetail.keyValue.species = $scope.taxonsList[d].species;
-    $scope.taxonDetail.keyValue.subspecies = $scope.taxonsList[d].subspecies;
-    $scope.taxonDetail.keyValue.specificEpithet = $scope.taxonsList[d].specificEpithet;
-    $scope.taxonDetail.keyValue.infraSpecificEpithet = $scope.taxonsList[d].infraSpecificEpithet;
+    $scope.taxonDetail.keyValue.kingdom = emptyStrIfNull($scope.taxonsList[d].kingdom);
+    $scope.taxonDetail.keyValue.phylum = emptyStrIfNull($scope.taxonsList[d].phylum);
+    $scope.taxonDetail.keyValue.order = emptyStrIfNull($scope.taxonsList[d].order);
+    $scope.taxonDetail.keyValue.phylum = emptyStrIfNull($scope.taxonsList[d].class);
+    $scope.taxonDetail.keyValue.family = emptyStrIfNull($scope.taxonsList[d].family);
+    $scope.taxonDetail.keyValue.genus = emptyStrIfNull($scope.taxonsList[d].genus);
+    $scope.taxonDetail.keyValue.species = emptyStrIfNull($scope.taxonsList[d].species);
+    $scope.taxonDetail.keyValue.subspecies = emptyStrIfNull($scope.taxonsList[d].subspecies);
+    $scope.taxonDetail.keyValue.specificEpithet = emptyStrIfNull($scope.taxonsList[d].specificEpithet);
+    $scope.taxonDetail.keyValue.infraSpecificEpithet = emptyStrIfNull($scope.taxonsList[d].infraSpecificEpithet);
+    // Adding LSID detail to details view
+    $scope.taxonDetail.keyValue.lsid = emptyStrIfNull($scope.taxonsList[d].lsid);
   };
 
   function _s2ab(s) {
@@ -258,7 +267,7 @@ controller('taxonController', function($scope, tRexAPIService){
     for (var i = 0;i < $scope.taxonsList.length;i++) {
       row = [];
       for (var key in $scope.taxonsList[i]) {
-        if(key != '$$hashKey' && key != 'raw_response' && key != 'has_url'){
+        if(key != '$$hashKey' && key != 'raw_response' && key != 'has_url' && key != 'has_results'){
           if (i == 0) {
             headers.push($scope._getString(key));
           }
@@ -362,19 +371,25 @@ controller('taxonController', function($scope, tRexAPIService){
           var taxonRanks =  [ ];
           var taxonClassifications = { };
           var taxonRank = { };
-          var data_source_unboxing = null;
+          var data_source_obj = null;
+          var temp_lsid = null;
           for(var k in v.results) {
-            data_source_unboxing = null;
+            // Compute taxon hiearchy
             for(var i in $scope.dataSources) {
               if ($scope.dataSources[i].id == v.results[k].data_source_id) {
-                data_source_unboxing = $scope.dataSources[i].classification_path_ranks_unbox;
+                if (($scope.dataSources[i].classification_path_ranks_unbox != undefined
+                  && $scope.dataSources[i].classification_path_ranks_unbox != null)
+                  || ($scope.dataSources[i].lsid_computations != undefined
+                    && $scope.dataSources[i].lsid_computations != null)) {
+                  data_source_obj = $scope.dataSources[i];
+                }
                 break;
               }
             }
 
             taxonClassifications = _getTaxonClassification(
-                  data_source_unboxing != null ? v.results[k].classification_path.split(data_source_unboxing.separator) : null
-                , data_source_unboxing != null ? data_source_unboxing.indexes : null);
+                  data_source_obj != null && data_source_obj.classification_path_ranks_unbox != null ? v.results[k].classification_path.split(data_source_obj.classification_path_ranks_unbox.separator) : null
+                , data_source_obj != null && data_source_obj.classification_path_ranks_unbox != null ? data_source_obj.classification_path_ranks_unbox.indexes : null);
 
             taxonRanks = [
                 taxonClassifications.kingdom != null ? 'kingdom' : null
@@ -390,6 +405,12 @@ controller('taxonController', function($scope, tRexAPIService){
             ];
 
             taxonRank = $scope._getString(_getTaxonRank(taxonRanks));
+
+            // Compute LSID
+            if (data_source_obj != null && data_source_obj.lsid != undefined) {
+              temp_lsid = compute_lsid(data_source_obj, v.results[k]);
+              //temp_lsid = data_source_obj.lsid + "" + v.results[k][data_source_obj.lsid_param];
+            }
 
             $scope.taxonsList.push({
                 supplied_name_string: v.supplied_name_string
@@ -410,6 +431,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , score: v.results[k].score
               , match: $scope._getString(v.is_known_name)
               , url: v.results[k].url
+              , lsid: temp_lsid
               , has_url: v.results[k].url != undefined
               , match_type: $scope._getString('match_type' + v.results[k].match_type)
               , data_source_id: v.results[k].data_source_id
@@ -423,6 +445,7 @@ controller('taxonController', function($scope, tRexAPIService){
               , score: v.results[k].score
               , status: v.results[k].status
               , raw_response: v.results[k]
+              , has_results: true
             });
           }
         } else {
@@ -444,6 +467,7 @@ controller('taxonController', function($scope, tRexAPIService){
             , data_source_title: null
             , match: $scope._getString(v.is_known_name)
             , url: null
+            , lsid: null
             , has_url: false
             , data_source_id: null
             , match_type: null
@@ -457,6 +481,7 @@ controller('taxonController', function($scope, tRexAPIService){
             , score: null
             , status: null
             , raw_response: null
+            , has_results: false
           });
         }
       });
@@ -690,4 +715,30 @@ controller('taxonController', function($scope, tRexAPIService){
       $scope.pageIndex = $scope.pageIndex - 1;
     }
   };
+
+  function emptyStrIfNull(v) {
+    return v != null ? v : '';
+  }
+
+  function compute_lsid(o, d) {
+    var result = "";
+    var results = [];
+    var computationsObj = {};
+    for (var k in o.lsid_computations) {
+      computationsObj = o.lsid_computations[k];
+      if (computationsObj.operation == "concat") {
+        results.push(o.lsid + d[computationsObj.lsid_param]);
+      } else if (computationsObj.operation == "subs") {
+        if (computationsObj.replacement.type == "byValue") {
+          results.push(d[computationsObj.target.objectKey].replace(
+            computationsObj.replacement.targetStr,
+            computationsObj.replacement.value
+          ));
+        }
+      }
+    }
+
+    result = results.join();
+    return result;
+  }
 });

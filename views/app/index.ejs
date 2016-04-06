@@ -167,7 +167,7 @@
               </td>
               <td>{{ taxon.score }}</td>
               <td>{{ taxon.match_type }}</td>
-              <td><a href="#modal-details" ng-click="on_details($index)"><%= __('tblColDetails') %></a></td>
+              <td><a href="#modal-details" ng-click="on_details($index)" ng-if="taxon.has_results"><%= __('tblColDetails') %></a></td>
             </tr>
         </tbody>
       </table>

@@ -1,419 +1,432 @@
-[
-  {
-    "id": 1,
-    "title": "Catalogue of Life",
-    "datasource_type": "general",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": 6,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "Current Name": "X",
-    "Varios Resultados": "X"
-  },
-  {
-    "id": 3,
-    "title": "ITIS",
-    "datasource_type": "general",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "Kingdom|Subkingdom|Infrakingdom|Phylum|Subphylum|Infraphylum|Superclass|Class|Subclass|Infraclass|Order|Suborder|Family|Subfamily|Genus|Species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 3,
-        "class": 7,
-        "order": 10,
-        "family": 12,
-        "genus": 14,
-        "species": 15,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "Current Name": "X",
-    "URL": "http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=",
-    "url_param": "taxon_id"
-  },
-  {
-    "id": 4,
-    "title": "NCBI",
-    "datasource_type": "general",
-    "Jerarquia_Taxonomica": "X",
-    "URL": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=",
-    "url_param": "taxon_id"
-  },
-  {
-    "id": 5,
-    "title": "Index Fungorum",
-    "datasource_type": "specialized",
-    "Especialidad": "Hongos",
-    "LSID": "urn:lsid:indexfungorum.org:names:",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "regn.|phyl.|cl.|ord.|fam.|gen.|var.",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": -1,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": 6
-      }
-    },
-    "Current Name": "X",
-    "Varios Resultados": "X",
-    "URL": "http://www.indexfungorum.org/names/NamesRecord.asp?RecordID=",
-    "url_param": "taxon_id",
-    "lsid_param": "taxon_id"
-  },
-  {
-    "id": 6,
-    "title": "GRIN Taxonomy for Plants",
-    "datasource_type": "specialized",
-    "Especialidad": "Plantas",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "Reino|Familia|Género|Especie",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": -1,
-        "class": -1,
-        "order": -1,
-        "family": 2,
-        "genus": 3,
-        "species": 4,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
+[{
+	"id": 1,
+	"title": "Catalogue of Life",
+	"datasource_type": "general",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": 6,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"Current Name": "X",
+	"Varios Resultados": "X"
+}, {
+	"id": 3,
+	"title": "ITIS",
+	"datasource_type": "general",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "Kingdom|Subkingdom|Infrakingdom|Phylum|Subphylum|Infraphylum|Superclass|Class|Subclass|Infraclass|Order|Suborder|Family|Subfamily|Genus|Species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 3,
+			"class": 7,
+			"order": 10,
+			"family": 12,
+			"genus": 14,
+			"species": 15,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"Current Name": "X",
+	"URL": "http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=",
+	"url_param": "taxon_id"
+}, {
+	"id": 4,
+	"title": "NCBI",
+	"datasource_type": "general",
+	"Jerarquia_Taxonomica": "X",
+	"URL": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=",
+	"url_param": "taxon_id"
+}, {
+	"id": 5,
+	"title": "Index Fungorum",
+	"datasource_type": "specialized",
+	"Especialidad": "Hongos",
+	"lsid": "urn:lsid:indexfungorum.org:names:",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "regn.|phyl.|cl.|ord.|fam.|gen.|var.",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": -1,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": 6
+		}
+	},
+	"Current Name": "X",
+	"Varios Resultados": "X",
+	"URL": "http://www.indexfungorum.org/names/NamesRecord.asp?RecordID=",
+	"url_param": "taxon_id",
+  "lsid_computations":[
+    {
+      "operation": "concat",
+      "lsid_param": "taxon_id"
+    }
+  ]
+}, {
+	"id": 6,
+	"title": "GRIN Taxonomy for Plants",
+	"datasource_type": "specialized",
+	"Especialidad": "Plantas",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "Reino|Familia|Género|Especie",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": -1,
+			"class": -1,
+			"order": -1,
+			"family": 2,
+			"genus": 3,
+			"species": 4,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	}
+}, {
+	"id": 8,
+	"title": "Interim Register of Marine and Nonmarine Genera",
+	"datasource_type": "specialized",
+	"Especialidad": "Organismos marinos",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": 6,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"Current Name": "X",
+	"URL": "http://www.marine.csiro.au/mirrorsearch/ir_search.list_species?sp_id=",
+	"url_param": "taxon_id"
+}, {
+	"id": 9,
+	"title": "WoRMS",
+	"datasource_type": "specialized",
+	"Especialidad": "Organismos marinos",
+	"lsid": "urn:lsid:marinespecies.org:taxname:",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": -6,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+  "lsid_computations": [
+    {
+      "operation": "concat",
+      "lsid_param": "taxon_id"
+    }
+  ]
+}, {
+	"id": 11,
+	"title": "GBIF Backbone Taxonomy",
+	"datasource_type": "general",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": 6,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"Current Name": "X",
+	"URL": "http://www.gbif.org/species/",
+  "url_param": "taxon_id"
+}, {
+	"id": 100,
+	"title": "Mushroom Observer",
+	"datasource_type": "specialized",
+	"Especialidad": "Hongos"
+}, {
+	"id": 118,
+	"title": "AmphibiaWeb",
+	"datasource_type": "specialized",
+	"Especialidad": "Anfibios"
+}, {
+	"id": 125,
+	"title": "Global Invasive Species Database",
+	"datasource_type": "specialized",
+	"Especialidad": "Especies Invasoras"
+}, {
+	"id": 132,
+	"title": "ZooBank",
+	"datasource_type": "specialized",
+	"Especialidad": "Animales",
+	"lsid": "dejar eliminando http://zoobank.org/",
+	"Varios Resultados": "X",
+	"URL": "",
+  "lsid_computations": [
+    {
+      "operation": "subs",
+      "target": {
+        "objectKey": "url"
+      },
+      "replacement": {
+        "type": "byValue",
+        "targetStr": "http://zoobank.org/",
+        "value": ""
       }
     }
-  },
-  {
-    "id": 8,
-    "title": "Interim Register of Marine and Nonmarine Genera",
-    "datasource_type": "specialized",
-    "Especialidad": "Organismos marinos",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": 6,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "Current Name": "X",
-    "URL": "http://www.marine.csiro.au/mirrorsearch/ir_search.list_species?sp_id=",
-    "url_param": "taxon_id"
-  },
-  {
-    "id": 9,
-    "title": "WoRMS",
-    "datasource_type": "specialized",
-    "Especialidad": "Organismos marinos",
-    "LSID": "urn:lsid:marinespecies.org:taxname: + &lt;taxon-id&gt;",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": -6,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "URL": ""
-  },
-  {
-    "id": 11,
-    "title": "GBIF Backbone Taxonomy",
-    "datasource_type": "general",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "kingdom|phylum|class|order|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": 6,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "Current Name": "X",
-    "URL": "http://www.gbif.org/species/ + &lt;taxon-id&gt;"
-  },
-  {
-    "id": 100,
-    "title": "Mushroom Observer",
-    "datasource_type": "specialized",
-    "Especialidad": "Hongos",
-    "URL": ""
-  },
-  {
-    "id": 118,
-    "title": "AmphibiaWeb",
-    "datasource_type": "specialized",
-    "Especialidad": "Anfibios",
-    "classification_path_ranks": "Sin Clasificación ni autoría de Nombre científico",
-    "URL": ""
-  },
-  {
-    "id": 125,
-    "title": "Global Invasive Species Database",
-    "datasource_type": "specialized",
-    "Especialidad": "Especies Invasoras",
-    "URL": ""
-  },
-  {
-    "id": 132,
-    "title": "ZooBank",
-    "datasource_type": "specialized",
-    "Especialidad": "Animales",
-    "LSID": "dejar &lt;url&gt; &lt;/url&gt; eliminando http://zoobank.org/",
-    "Varios Resultados": "X",
-    "URL": ""
-  },
-  {
-    "id": 134,
-    "title": "AntWeb",
-    "datasource_type": "specialized",
-    "Especialidad": "Hormigas",
-    "URL": ""
-  },
-  {
-    "id": 151,
-    "title": "Catalog of Fishes",
-    "datasource_type": "specialized",
-    "Especialidad": "Peces",
-    "URL": ""
-  },
-  {
-    "id": 155,
-    "title": "FishBase",
-    "datasource_type": "specialized",
-    "Especialidad": "Peces",
-    "URL": ""
-  },
-  {
-    "id": 163,
-    "title": "IUCN Red List of Threatened Species",
-    "datasource_type": "specialized",
-    "Especialidad": "Especies Amenazadas",
-    "URL": "http://www.iucnredlist.org/details/ + &lt;taxon-id&gt;",
-    "GBIF Dataset": "X"
-  },
-  {
-    "id": 164,
-    "title": "BioLib.cz",
-    "datasource_type": "general",
-    "URL": ""
-  },
-  {
-    "id": 165,
-    "title": "Tropicos - Missouri Botanical Garden",
-    "datasource_type": "specialized",
-    "Especialidad": "Plantas",
-    "URL": ""
-  },
-  {
-    "id": 167,
-    "title": "The International Plant Names Index",
-    "datasource_type": "specialized",
-    "Especialidad": "Plantas",
-    "LSID": "&lt;global-id&gt;",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "Familia|Especie",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": -1,
-        "phylum": -1,
-        "class": -1,
-        "order": -1,
-        "family": 0,
-        "genus": -1,
-        "species": 1,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "URL": "",
-    "GBIF Dataset": "X"
-  },
-  {
-    "id": 168,
-    "title": "Index to Organism Names",
-    "datasource_type": "specialized",
-    "Especialidad": "Plantas",
-    "LSID": "&lt;url&gt; + reemplazar http://www.organismnames.com/details.htm?lsid= por urn:lsid:organismnames.com:name:",
-    "Varios Resultados": "X",
-    "URL": ""
-  },
-  {
-    "id": 169,
-    "title": "uBio NameBank",
-    "datasource_type": "general",
-    "LSID": "&lt;global-id&gt;",
-    "Current Name": "X",
-    "URL": ""
-  },
-  {
-    "id": 170,
-    "title": "Arctos",
-    "datasource_type": "general",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "kingdom|phylum|class|order|family|genus|",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": 0,
-        "phylum": 1,
-        "class": 2,
-        "order": 3,
-        "family": 4,
-        "genus": 5,
-        "species": -1,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "URL": "http://arctos.database.museum/name/ + &lt;canonical-form&gt;"
-  },
-  {
-    "id": 172,
-    "title": "The Paleobiology Database",
-    "datasource_type": "specialized",
-    "Especialidad": "Paleobiología",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "class|order|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": -1,
-        "phylum": -1,
-        "class": 0,
-        "order": 1,
-        "family": 2,
-        "genus": 3,
-        "species": 4,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
+  ]
+}, {
+	"id": 134,
+	"title": "AntWeb",
+	"datasource_type": "specialized",
+	"Especialidad": "Hormigas"
+}, {
+	"id": 151,
+	"title": "Catalog of Fishes",
+	"datasource_type": "specialized",
+	"Especialidad": "Peces"
+}, {
+	"id": 155,
+	"title": "FishBase",
+	"datasource_type": "specialized",
+	"Especialidad": "Peces"
+}, {
+	"id": 163,
+	"title": "IUCN Red List of Threatened Species",
+	"datasource_type": "specialized",
+	"Especialidad": "Especies Amenazadas",
+	"URL": "http://www.iucnredlist.org/details/",
+	"GBIF Dataset": "X",
+	"url_param": "taxon_id"
+}, {
+	"id": 164,
+	"title": "BioLib.cz",
+	"datasource_type": "general"
+}, {
+	"id": 165,
+	"title": "Tropicos - Missouri Botanical Garden",
+	"datasource_type": "specialized",
+	"Especialidad": "Plantas"
+}, {
+	"id": 167,
+	"title": "The International Plant Names Index",
+	"datasource_type": "specialized",
+	"Especialidad": "Plantas",
+	"lsid": "",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "Familia|Especie",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": -1,
+			"phylum": -1,
+			"class": -1,
+			"order": -1,
+			"family": 0,
+			"genus": -1,
+			"species": 1,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"URL": "",
+	"GBIF Dataset": "X",
+  "lsid_computations":[
+    {
+      "operation": "concat",
+      "lsid_param": "global_id"
+    }
+  ]
+}, {
+	"id": 168,
+	"title": "Index to Organism Names",
+	"datasource_type": "specialized",
+	"Especialidad": "Plantas",
+	"lsid": "reemplazar http://www.organismnames.com/details.htm?lsid= por urn:lsid:organismnames.com:name:",
+	"Varios Resultados": "X",
+  "lsid_computations": [
+    {
+      "operation": "subs",
+      "target": {
+        "objectKey": "url"
+      },
+      "replacement": {
+        "type": "byValue",
+        "targetStr": "http://www.organismnames.com/details.htm?lsid=",
+        "value": "urn:lsid:organismnames.com:name:"
       }
     }
-  },
-  {
-    "id": 173,
-    "title": "The Reptile Database",
-    "datasource_type": "specialized",
-    "Especialidad": "Reptiles",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "class|family|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": -1,
-        "phylum": -1,
-        "class": 0,
-        "order": -1,
-        "family": 1,
-        "genus": -1,
-        "species": 2,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "URL": "http://reptile-database.reptarium.cz/species?genus= + &lt;canonical-form&gt; Con esta estructura: Cnemidophorus&species=lemniscatus (para &lt;canonical-form&gt;Cnemidophorus lemniscatus&lt;/canonical-form&gt;)"
-  },
-  {
-    "id": 174,
-    "title": "The Mammal Species of The World",
-    "datasource_type": "specialized",
-    "Especialidad": "Mamíferos",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "class|order|suborder|family|genus|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": -1,
-        "phylum": -1,
-        "class": 0,
-        "order": 1,
-        "family": 3,
-        "genus": 4,
-        "species": 5,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
-    },
-    "Current Name": "X"
-  },
-  {
-    "id": 175,
-    "title": "BirdLife International",
-    "datasource_type": "specialized",
-    "Especialidad": "Aves",
-    "Jerarquia_Taxonomica": "X",
-    "classification_path_ranks": "class|order|family|species",
-    "classification_path_ranks_unbox": {
-      "separator": "|",
-      "indexes": {
-        "kingdom": -1,
-        "phylum": -1,
-        "class": 0,
-        "order": 1,
-        "family": 2,
-        "genus": -1,
-        "species": 3,
-        "subspecies": -1,
-        "specificEpithet": -1,
-        "infraSpecificEpithet": -1
-      }
+  ]
+}, {
+	"id": 169,
+	"title": "uBio NameBank",
+	"datasource_type": "general",
+	"lsid": "",
+	"Current Name": "X",
+  "lsid_computations":[
+    {
+      "operation": "concat",
+      "lsid_param": "global_id"
     }
-  }
-]
+  ]
+}, {
+	"id": 170,
+	"title": "Arctos",
+	"datasource_type": "general",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "kingdom|phylum|class|order|family|genus|",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": 0,
+			"phylum": 1,
+			"class": 2,
+			"order": 3,
+			"family": 4,
+			"genus": 5,
+			"species": -1,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"URL": "http://arctos.database.museum/name/",
+	"url_param": "canonical_form"
+}, {
+	"id": 172,
+	"title": "The Paleobiology Database",
+	"datasource_type": "specialized",
+	"Especialidad": "Paleobiología",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "class|order|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": -1,
+			"phylum": -1,
+			"class": 0,
+			"order": 1,
+			"family": 2,
+			"genus": 3,
+			"species": 4,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	}
+}, {
+	"id": 173,
+	"title": "The Reptile Database",
+	"datasource_type": "specialized",
+	"Especialidad": "Reptiles",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "class|family|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": -1,
+			"phylum": -1,
+			"class": 0,
+			"order": -1,
+			"family": 1,
+			"genus": -1,
+			"species": 2,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"URL": "http://reptile-database.reptarium.cz/species?genus= + &lt;canonical-form&gt; Con esta estructura: Cnemidophorus&species=lemniscatus (para &lt;canonical-form&gt;Cnemidophorus lemniscatus&lt;/canonical-form&gt;)"
+}, {
+	"id": 174,
+	"title": "The Mammal Species of The World",
+	"datasource_type": "specialized",
+	"Especialidad": "Mamíferos",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "class|order|suborder|family|genus|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": -1,
+			"phylum": -1,
+			"class": 0,
+			"order": 1,
+			"family": 3,
+			"genus": 4,
+			"species": 5,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	},
+	"Current Name": "X"
+}, {
+	"id": 175,
+	"title": "BirdLife International",
+	"datasource_type": "specialized",
+	"Especialidad": "Aves",
+	"Jerarquia_Taxonomica": "X",
+	"classification_path_ranks": "class|order|family|species",
+	"classification_path_ranks_unbox": {
+		"separator": "|",
+		"indexes": {
+			"kingdom": -1,
+			"phylum": -1,
+			"class": 0,
+			"order": 1,
+			"family": 2,
+			"genus": -1,
+			"species": 3,
+			"subspecies": -1,
+			"specificEpithet": -1,
+			"infraSpecificEpithet": -1
+		}
+	}
+}]
