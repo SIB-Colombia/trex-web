@@ -44,14 +44,26 @@
 	},
 	"Current Name": "X",
 	"URL": "http://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=",
-	"url_param": "taxon_id"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	]
 }, {
 	"id": 4,
 	"title": "NCBI",
 	"datasource_type": "general",
 	"Jerarquia_Taxonomica": "X",
 	"URL": "http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=",
-	"url_param": "taxon_id"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	]
 }, {
 	"id": 5,
 	"title": "Index Fungorum",
@@ -78,7 +90,13 @@
 	"Current Name": "X",
 	"Varios Resultados": "X",
 	"URL": "http://www.indexfungorum.org/names/NamesRecord.asp?RecordID=",
-	"url_param": "taxon_id",
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	],
   "lsid_computations":[
     {
       "operation": "concat",
@@ -131,7 +149,13 @@
 	},
 	"Current Name": "X",
 	"URL": "http://www.marine.csiro.au/mirrorsearch/ir_search.list_species?sp_id=",
-	"url_param": "taxon_id"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	]
 }, {
 	"id": 9,
 	"title": "WoRMS",
@@ -184,7 +208,13 @@
 	},
 	"Current Name": "X",
 	"URL": "http://www.gbif.org/species/",
-  "url_param": "taxon_id"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	]
 }, {
 	"id": 100,
 	"title": "Mushroom Observer",
@@ -207,7 +237,6 @@
 	"Especialidad": "Animales",
 	"lsid": "dejar eliminando http://zoobank.org/",
 	"Varios Resultados": "X",
-	"URL": "",
   "lsid_computations": [
     {
       "operation": "subs",
@@ -243,7 +272,13 @@
 	"Especialidad": "Especies Amenazadas",
 	"URL": "http://www.iucnredlist.org/details/",
 	"GBIF Dataset": "X",
-	"url_param": "taxon_id"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "taxon_id"
+		}
+	]
 }, {
 	"id": 164,
 	"title": "BioLib.cz",
@@ -276,7 +311,6 @@
 			"infraSpecificEpithet": -1
 		}
 	},
-	"URL": "",
 	"GBIF Dataset": "X",
   "lsid_computations":[
     {
@@ -338,7 +372,13 @@
 		}
 	},
 	"URL": "http://arctos.database.museum/name/",
-	"url_param": "canonical_form"
+	"url_computations": [
+		{
+			"operation": "concat",
+			"type": "byUrlParam",
+			"url_param": "canonical_form"
+		}
+	]
 }, {
 	"id": 172,
 	"title": "The Paleobiology Database",
@@ -383,7 +423,14 @@
 			"infraSpecificEpithet": -1
 		}
 	},
-	"URL": "http://reptile-database.reptarium.cz/species?genus= + &lt;canonical-form&gt; Con esta estructura: Cnemidophorus&species=lemniscatus (para &lt;canonical-form&gt;Cnemidophorus lemniscatus&lt;/canonical-form&gt;)"
+	"URL": "http://reptile-database.reptarium.cz/species?",
+	"url_computations": [
+		{
+			"operation": "custom",
+			"abstract": "the canonical_form value must be splitted by ' ' to fill the genus and species param",
+			"example": "http://reptile-database.reptarium.cz/species?genus=Gonatodes&species=riveroi"
+		}
+	]
 }, {
 	"id": 174,
 	"title": "The Mammal Species of The World",

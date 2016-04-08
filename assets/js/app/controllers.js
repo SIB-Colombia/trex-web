@@ -124,6 +124,8 @@ controller('taxonController', function($scope, tRexAPIService){
         datasource_type: v.datasource_type,
         lsid: v.lsid,
         lsid_computations: v.lsid_computations,
+        url: v.URL,
+        url_computations: v.url_computations,
         classification_path_ranks_unbox: v.classification_path_ranks_unbox
       });
     });
@@ -373,14 +375,33 @@ controller('taxonController', function($scope, tRexAPIService){
           var taxonRank = { };
           var data_source_obj = null;
           var temp_lsid = null;
-          for(var k in v.results) {
-            // Compute taxon hiearchy
+          var has_url = false;
+          var temp_url = null;
+          for(var sub_k in v.results) {
+            // -------------------------------------------------------
+            // ON THE FIRST ITEM IS THE MOST APPROXIMATE RESULT ALWAYS
+            // COMMENT THIS IF YOU WANT TO GET ALL THE RESULTS
+            // -------------------------------------------------------
+            if (sub_k > 0) break;
+            // -------------------------------------------------------
+            //Reset auxiliary variables
+            taxonRanks = [ ];
+            taxonClassifications = { };
+            taxonRank = { };
+            data_source_obj = null;
+            temp_lsid = null;
+            has_url = v.results[sub_k].url != undefined && v.results[sub_k].url != null
+            temp_url = has_url ? v.results[sub_k].url : null;
+
+            // Compute taxon hiearchy, Compute lsid urn, Compute url
             for(var i in $scope.dataSources) {
-              if ($scope.dataSources[i].id == v.results[k].data_source_id) {
+              if ($scope.dataSources[i].id == v.results[sub_k].data_source_id) {
                 if (($scope.dataSources[i].classification_path_ranks_unbox != undefined
                   && $scope.dataSources[i].classification_path_ranks_unbox != null)
                   || ($scope.dataSources[i].lsid_computations != undefined
-                    && $scope.dataSources[i].lsid_computations != null)) {
+                    && $scope.dataSources[i].lsid_computations != null)
+                  || ($scope.dataSources[i].url_computations != undefined
+                      && $scope.dataSources[i].url_computations != null)) {
                   data_source_obj = $scope.dataSources[i];
                 }
                 break;
@@ -388,7 +409,7 @@ controller('taxonController', function($scope, tRexAPIService){
             }
 
             taxonClassifications = _getTaxonClassification(
-                  data_source_obj != null && data_source_obj.classification_path_ranks_unbox != null ? v.results[k].classification_path.split(data_source_obj.classification_path_ranks_unbox.separator) : null
+                  data_source_obj != null && data_source_obj.classification_path_ranks_unbox != null && v.results[sub_k].classification_path != undefined ? v.results[sub_k].classification_path.split(data_source_obj.classification_path_ranks_unbox.separator) : null
                 , data_source_obj != null && data_source_obj.classification_path_ranks_unbox != null ? data_source_obj.classification_path_ranks_unbox.indexes : null);
 
             taxonRanks = [
@@ -408,8 +429,14 @@ controller('taxonController', function($scope, tRexAPIService){
 
             // Compute LSID
             if (data_source_obj != null && data_source_obj.lsid != undefined) {
-              temp_lsid = compute_lsid(data_source_obj, v.results[k]);
-              //temp_lsid = data_source_obj.lsid + "" + v.results[k][data_source_obj.lsid_param];
+              temp_lsid = compute_lsid(data_source_obj, v.results[sub_k]);
+            }
+
+            // Compute URL
+            if (v.results[sub_k].url == undefined && data_source_obj != null
+              && data_source_obj.url != undefined) {
+                temp_url = compute_url(data_source_obj, v.results[sub_k]);
+                has_url = temp_url != undefined && temp_url != null;
             }
 
             $scope.taxonsList.push({
@@ -426,25 +453,25 @@ controller('taxonController', function($scope, tRexAPIService){
               , infraSpecificEpithet: taxonClassifications.infraSpecificEpithet
               , taxonRank: taxonRank
               , author: null
-              , scientificName: v.results[k].name_string
-              , data_source_title: v.results[k].data_source_title
-              , score: v.results[k].score
+              , scientificName: v.results[sub_k].current_name_string != undefined ? v.results[sub_k].current_name_string : v.results[sub_k].name_string
+              , data_source_title: v.results[sub_k].data_source_title
+              , score: v.results[sub_k].score
               , match: $scope._getString(v.is_known_name)
-              , url: v.results[k].url
+              , url: temp_url
               , lsid: temp_lsid
-              , has_url: v.results[k].url != undefined
-              , match_type: $scope._getString('match_type' + v.results[k].match_type)
-              , data_source_id: v.results[k].data_source_id
-              , gni_uuid: v.results[k].gni_uuid
-              , canonical_form: v.results[k].canonical_form
-              , classification_path: v.results[k].classification_path
-              , taxon_id: v.results[k].taxon_id
-              , global_id: v.results[k].global_id
-              , local_id: v.results[k].local_id
-              , prescore: v.results[k].prescore
-              , score: v.results[k].score
-              , status: v.results[k].status
-              , raw_response: v.results[k]
+              , has_url: has_url
+              , match_type: $scope._getString('match_type' + v.results[sub_k].match_type)
+              , data_source_id: v.results[sub_k].data_source_id
+              , gni_uuid: v.results[sub_k].gni_uuid
+              , canonical_form: v.results[sub_k].canonical_form
+              , classification_path: v.results[sub_k].classification_path
+              , taxon_id: v.results[sub_k].taxon_id
+              , global_id: v.results[sub_k].global_id
+              , local_id: v.results[sub_k].local_id
+              , prescore: v.results[sub_k].prescore
+              , score: v.results[sub_k].score
+              , status: v.results[sub_k].status
+              , raw_response: v.results[sub_k]
               , has_results: true
             });
           }
@@ -532,7 +559,7 @@ controller('taxonController', function($scope, tRexAPIService){
       infraSpecificEpithet: null,
     };
 
-    if ((path != undefined && path != null) || (indexes != undefined && indexes != null)) {
+    if ((path != undefined && path != null) && (indexes != undefined && indexes != null)) {
       returnObj = {
         kingdom: indexes.kingdom >= 0 ? path[indexes.kingdom]: null,
         phylum: indexes.phylum >= 0 ? path[indexes.phylum]: null,
@@ -737,8 +764,31 @@ controller('taxonController', function($scope, tRexAPIService){
         }
       }
     }
+    result = results.join('');
+    return result;
+  }
 
-    result = results.join();
+  function compute_url(o, d) {
+    var result = "";
+    var results = [];
+    var computationsObj = { };
+    var temp = null;
+    for (var k in o.url_computations) {
+      computationsObj = o.url_computations[k];
+      if (computationsObj.operation == "concat") {
+        if (computationsObj.type == "byUrlParam") {
+          results.push(o.url + d[computationsObj.url_param]);
+        }
+      } else if (computationsObj.operation == "custom") {
+        if (o.id == 173 && d.canonical_form != null)  { // The reptile-database
+          temp = d.canonical_form.split(' ');
+          if (temp.length >= 2) {
+            results.push(o.url + "genus=" + temp[0] + "&species=" + temp.splice(1, temp.length - 1).join(' '));
+          }
+        }
+      }
+    }
+    result = results.join('');
     return result;
   }
 });
