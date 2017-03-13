@@ -28,7 +28,7 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "NODE_ENV=development && node app.js"
   },
   "main": "app.js",
   "repository": {
