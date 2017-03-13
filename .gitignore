@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 .DS_Store
 .python-version
 
+=======
+>>>>>>> 204f7bb204b50bdde79a880c793841482b9e8c58
 # Logs
 logs
 *.log
