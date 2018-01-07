@@ -1,3 +1,3 @@
-FROM node:7.7.2-onbuild
+FROM node:9.3.0-onbuild
 
 EXPOSE 1337

@@ -39,7 +39,7 @@ module.exports.connections = {
   *                                                                          *
   ***************************************************************************/
   trexAPI: {
-    url: 'http://localhost:1080'
+    url: 'http://trex-api:1080'
   }
 
 
